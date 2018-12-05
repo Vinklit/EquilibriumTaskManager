@@ -6,14 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
-    private ToDoListAdapter mAdapter;
-    ColorDrawable background;
+public class SwipeToDeleteCallback2 extends ItemTouchHelper.SimpleCallback {
+    private ToDoListAdapter2 mAdapter2;
+   ColorDrawable background;
 
-    public SwipeToDeleteCallback(ToDoListAdapter adapter) {
+    public SwipeToDeleteCallback2(ToDoListAdapter2 adapter2) {
         super( 0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT );
-        mAdapter = adapter;
-        background = new ColorDrawable(Color.BLACK);
+        mAdapter2 = adapter2;
+        background = new ColorDrawable(Color.BLUE);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
-        mAdapter.deleteItem(position);
+        mAdapter2.deleteItem(position);
     }
 
 

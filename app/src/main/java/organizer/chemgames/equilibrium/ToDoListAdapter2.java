@@ -1,8 +1,5 @@
 package organizer.chemgames.equilibrium;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,22 +10,21 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHolder> {
+public class ToDoListAdapter2 extends RecyclerView.Adapter<ToDoListAdapter2.ViewHolder> {
 
     private List<Task> mData = new ArrayList<Task>();
     private LayoutInflater mInflater;
     private ItemClickListener listener;
 
     // data is passed into the constructor
-    ToDoListAdapter(Context context, ItemClickListener listener) {
+    ToDoListAdapter2(Context context, ItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
         this.listener = listener;
 
-    }
-
-    public ToDoListAdapter(TaskManagerEquilibrium context, ToDoListAdapter2.ItemClickListener itemClickListener) {
     }
 
     public void add(Task item) {
