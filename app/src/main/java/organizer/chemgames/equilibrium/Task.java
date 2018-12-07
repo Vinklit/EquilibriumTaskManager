@@ -17,10 +17,13 @@ public class Task {
         NOTDONE, DONE
     };
 
+
+
     public final static String TITLE = "title";
     public final static String PRIORITY = "priority";
     public final static String STATUS = "status";
     public final static String DATE = "date";
+    public final static String PROGRESS = "progress";
     public final static SimpleDateFormat FORMAT = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss", Locale.US);
 
@@ -28,12 +31,15 @@ public class Task {
     private Priority mPriority = Priority.LOW;
     private Status mStatus = Status.NOTDONE;
     private Date mDate = new Date();
+    private int mProgress = 0;
 
-    Task(String title, Priority priority, Status status, Date date) {
+
+    Task(String title, Priority priority, Status status, Date date, int progress) {
         this.mTitle = title;
         this.mPriority = priority;
         this.mStatus = status;
         this.mDate = date;
+        this.mProgress = progress;
     }
 
     Task(Intent intent) {
@@ -41,6 +47,7 @@ public class Task {
         mTitle = intent.getStringExtra(Task.TITLE);
         mPriority = Priority.valueOf(intent.getStringExtra(Task.PRIORITY));
         mStatus = Status.valueOf(intent.getStringExtra(Task.STATUS));
+        mProgress = intent.getIntExtra(Task.PROGRESS, 0  );
 
         try {
             mDate = Task.FORMAT.parse(intent.getStringExtra(Task.DATE));
@@ -81,14 +88,23 @@ public class Task {
         mDate = date;
     }
 
+    public int getProgress() {
+        return mProgress;
+    }
+
+    public void setProgress(int progress) {
+        mProgress = progress;
+    }
+
 
     public static void packageIntent(Intent intent, String title,
-                                     Priority priority, Status status, String date) {
+                                     Priority priority, Status status, String date, int progress) {
 
         intent.putExtra(Task.TITLE, title);
         intent.putExtra(Task.PRIORITY, priority.toString());
         intent.putExtra(Task.STATUS, status.toString());
         intent.putExtra(Task.DATE, date);
+        intent.putExtra(Task.PROGRESS, progress);
 
     }
 

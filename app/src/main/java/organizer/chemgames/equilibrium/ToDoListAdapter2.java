@@ -1,5 +1,6 @@
 package organizer.chemgames.equilibrium;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -85,6 +87,9 @@ public class ToDoListAdapter2 extends RecyclerView.Adapter<ToDoListAdapter2.View
                 } }});
         holder.priority.setText(toDoItem.getPriority().toString());
         holder.date.setText(Task.FORMAT.format(toDoItem.getDate()));
+        ObjectAnimator progressAnimator = ObjectAnimator.ofInt(holder.progressBar, "progress", 0, toDoItem.getProgress());
+        progressAnimator.setDuration(1000);
+        progressAnimator.start();
     }
 
 
@@ -94,6 +99,7 @@ public class ToDoListAdapter2 extends RecyclerView.Adapter<ToDoListAdapter2.View
         CheckBox status;
         TextView priority;
         TextView date;
+        ProgressBar progressBar;
 
         ViewHolder(View view) {
             super(view);
@@ -101,6 +107,7 @@ public class ToDoListAdapter2 extends RecyclerView.Adapter<ToDoListAdapter2.View
             status = (CheckBox) view.findViewById(R.id.statusCheckBox);
             priority = (TextView) view.findViewById(R.id.priorityView);
             date = (TextView) view.findViewById(R.id.dateView);
+            progressBar = (ProgressBar)view.findViewById( R.id.progressbar );
         }
     }
 

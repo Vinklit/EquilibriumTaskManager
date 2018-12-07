@@ -1,26 +1,20 @@
 package organizer.chemgames.equilibrium;
-
-
+import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ListActivity;
-import android.content.ClipData;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TaskManagerEquilibrium  extends Activity {
 
@@ -30,6 +24,8 @@ public class TaskManagerEquilibrium  extends Activity {
     ToDoListAdapter2 mAdapter2;
     RecyclerView lv;
     RecyclerView lv2;
+   // Calendar c = Calendar.getInstance();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +37,8 @@ public class TaskManagerEquilibrium  extends Activity {
 
         lv2= findViewById(R.id.listview2);
         lv2.setLayoutManager(new LinearLayoutManager(this));
+
+
 
 
         TextView footerView = (TextView) findViewById( R.id.footerView );
@@ -57,7 +55,6 @@ public class TaskManagerEquilibrium  extends Activity {
             public void onItemClick(View v, int position) {
                 v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) );
             }} );
-
 
                 lv.setAdapter( mAdapter );
                 lv.setBackgroundColor( getResources().getColor( R.color.colorAccent ) );
@@ -83,6 +80,10 @@ public class TaskManagerEquilibrium  extends Activity {
     }
 
 
+
+
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -93,10 +94,18 @@ public class TaskManagerEquilibrium  extends Activity {
                 Task mToDoItem = new Task(data);
                 if(mToDoItem.getTitle().equalsIgnoreCase( "A" )){
                     mAdapter.add(mToDoItem);
+                    //int progress =c.get(Calendar.SECOND);
+                    //mToDoItem.setProgress( progress );
+
+
+
                 }
                 else if (mToDoItem.getTitle().equalsIgnoreCase( "B" )){
                     mAdapter2.add(mToDoItem);
+
                 }
+
+                else mAdapter.add(mToDoItem);
 
             } } }
 
