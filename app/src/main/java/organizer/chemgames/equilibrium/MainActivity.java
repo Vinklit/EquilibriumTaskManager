@@ -147,12 +147,17 @@ public class MainActivity extends Activity {
                 String fullDate = dateString + " " + timeString;
 
 
-                //TODO: add "addition data"
-                int progress = setProgress();
+                long caldate= setProgress();
+                Calendar cc = Calendar.getInstance();
+                long setdate = cc.getTimeInMillis();
+
+                Toast.makeText( MainActivity.this, "package"+caldate+""+setdate, Toast.LENGTH_LONG ).show();
+
+
                 // Package ToDoItem data into an Intent
                 Intent data = new Intent();
                 Task.packageIntent(data, titleString, priority, status,
-                        fullDate, progress);
+                        fullDate, caldate, setdate);
                 setResult(RESULT_OK, data);
                 finish();
             }
@@ -163,9 +168,8 @@ public class MainActivity extends Activity {
 
     private void setDefaultDateTime() {
 
-        // Default is current time + 7 days
+        // Default is current time
         mDate = new Date();
-       // mDate = new Date(mDate.getTime() + SEVEN_DAYS);
         mDate = new Date(mDate.getTime());
 
         Calendar c = Calendar.getInstance();
@@ -183,7 +187,7 @@ public class MainActivity extends Activity {
         timeView.setText(timeString);
     }
 
-    private int setProgress () {
+    private long setProgress () {
         DatePicker datePicker = new DatePicker(this);
         TimePicker timePicker = new TimePicker(this);
         Calendar cal = Calendar.getInstance();
@@ -192,8 +196,7 @@ public class MainActivity extends Activity {
         cal.set(Calendar.YEAR, datePicker.getYear());
         cal.set(Calendar.HOUR, timePicker.getCurrentHour());
         cal.set(Calendar.MINUTE, timePicker.getCurrentMinute());
-        long j= cal.getTimeInMillis();
-        int i = (int)j;
+        long i= cal.getTimeInMillis();
         return i;
     }
 
@@ -283,10 +286,6 @@ public class MainActivity extends Activity {
                               int dayOfMonth) {
             setDateString(year, monthOfYear, dayOfMonth);
 
-            //TODO: define date and time here for progress
-
-            startDate = dayOfMonth;
-
             dateView.setText(dateString);
         }
 
@@ -311,7 +310,6 @@ public class MainActivity extends Activity {
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             setTimeString(hourOfDay, minute, 0);
-            startTime = minute;
             timeView.setText(timeString);
         }
     }

@@ -87,9 +87,9 @@ public class ToDoListAdapter2 extends RecyclerView.Adapter<ToDoListAdapter2.View
                 } }});
         holder.priority.setText(toDoItem.getPriority().toString());
         holder.date.setText(Task.FORMAT.format(toDoItem.getDate()));
-        ObjectAnimator progressAnimator = ObjectAnimator.ofInt(holder.progressBar, "progress", 0, toDoItem.getProgress());
+       /* ObjectAnimator progressAnimator = ObjectAnimator.ofInt(holder.progressBar, "progress", 0, toDoItem.getProgress());
         progressAnimator.setDuration(1000);
-        progressAnimator.start();
+        progressAnimator.start();*/
     }
 
 

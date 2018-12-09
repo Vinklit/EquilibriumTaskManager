@@ -23,7 +23,8 @@ public class Task {
     public final static String PRIORITY = "priority";
     public final static String STATUS = "status";
     public final static String DATE = "date";
-    public final static String PROGRESS = "progress";
+    public final static String CALDATE = "cal_date";
+    public final static String SETDATE = "set_date";
     public final static SimpleDateFormat FORMAT = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss", Locale.US);
 
@@ -31,15 +32,17 @@ public class Task {
     private Priority mPriority = Priority.LOW;
     private Status mStatus = Status.NOTDONE;
     private Date mDate = new Date();
-    private int mProgress = 0;
+    private long mcal_date = 0;
+    private long mset_date = 0;
 
 
-    Task(String title, Priority priority, Status status, Date date, int progress) {
+    Task(String title, Priority priority, Status status, Date date, long cal_date, long set_date) {
         this.mTitle = title;
         this.mPriority = priority;
         this.mStatus = status;
         this.mDate = date;
-        this.mProgress = progress;
+        this.mcal_date = cal_date;
+        this.mset_date = set_date;
     }
 
     Task(Intent intent) {
@@ -47,7 +50,8 @@ public class Task {
         mTitle = intent.getStringExtra(Task.TITLE);
         mPriority = Priority.valueOf(intent.getStringExtra(Task.PRIORITY));
         mStatus = Status.valueOf(intent.getStringExtra(Task.STATUS));
-        mProgress = intent.getIntExtra(Task.PROGRESS, 0  );
+        mcal_date = intent.getLongExtra(Task.CALDATE, 0  );
+        mset_date = intent.getLongExtra(Task.SETDATE, 0 );
 
         try {
             mDate = Task.FORMAT.parse(intent.getStringExtra(Task.DATE));
@@ -88,23 +92,33 @@ public class Task {
         mDate = date;
     }
 
-    public int getProgress() {
-        return mProgress;
+    public long getCal_date() {
+        return mcal_date;
     }
 
-    public void setProgress(int progress) {
-        mProgress = progress;
+    public void setCal_date(long cal_date) {
+        mcal_date = cal_date;
+    }
+
+    public long getSal_date() {
+        return mset_date;
+    }
+
+    public void setSet_date(int set_date) {
+        mset_date = set_date;
     }
 
 
     public static void packageIntent(Intent intent, String title,
-                                     Priority priority, Status status, String date, int progress) {
+                                     Priority priority, Status status, String date, long cal_date, long set_date) {
 
         intent.putExtra(Task.TITLE, title);
         intent.putExtra(Task.PRIORITY, priority.toString());
         intent.putExtra(Task.STATUS, status.toString());
         intent.putExtra(Task.DATE, date);
-        intent.putExtra(Task.PROGRESS, progress);
+        intent.putExtra(Task.CALDATE, cal_date);
+        intent.putExtra(Task.SETDATE, set_date);
+
 
     }
 

@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,7 +25,7 @@ public class TaskManagerEquilibrium  extends Activity {
     ToDoListAdapter2 mAdapter2;
     RecyclerView lv;
     RecyclerView lv2;
-   // Calendar c = Calendar.getInstance();
+    //long current_time;
 
 
     @Override
@@ -37,6 +38,11 @@ public class TaskManagerEquilibrium  extends Activity {
 
         lv2= findViewById(R.id.listview2);
         lv2.setLayoutManager(new LinearLayoutManager(this));
+
+        //Calendar c = Calendar.getInstance();
+
+
+       // current_time = c.getTimeInMillis();
 
 
 
@@ -94,8 +100,9 @@ public class TaskManagerEquilibrium  extends Activity {
                 Task mToDoItem = new Task(data);
                 if(mToDoItem.getTitle().equalsIgnoreCase( "A" )){
                     mAdapter.add(mToDoItem);
-                    //int progress =c.get(Calendar.SECOND);
-                    //mToDoItem.setProgress( progress );
+                    long current_time = Calendar.getInstance().getTimeInMillis();
+                    mToDoItem.setCal_date( current_time );
+
 
 
 
