@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
 
                 // Package ToDoItem data into an Intent
                 Intent data = new Intent();
-                Task.packageIntent(data, titleString, priority, status,
+                Task.packageIntent(data, titleString, priority, status, 0,
                         fullDate, caldate, setdate);
                 setResult(RESULT_OK, data);
                 finish();

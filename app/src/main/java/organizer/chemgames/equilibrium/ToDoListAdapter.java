@@ -31,20 +31,9 @@ import static android.widget.Toast.*;
 public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHolder> {
 
     private List<Task> mData = new ArrayList<Task>();
-
-    Calendar c = Calendar.getInstance();
-    //milliseconds in one hour
-    //final long current_time = c.getTimeInMillis();
-   /* final long cmillis = current_time % 1000;
-    final long csecond = (current_time/ 1000) % 60;
-    final long cminute = (current_time / (1000 * 60)) % 60;
-    final long chour = (current_time / (1000 * 60 * 60)) % 24;*/
-    Timer timer;
-    int i;
-
-
     private LayoutInflater mInflater;
     private ItemClickListener listener;
+
 
     // data is passed into the constructor
     ToDoListAdapter(Context context, ItemClickListener listener) {
@@ -114,77 +103,56 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
                 } }});
         holder.priority.setText(toDoItem.getPriority().toString());
         holder.date.setText(Task.FORMAT.format(toDoItem.getDate()));
-
-        if (holder.timerz != null) {
-            holder.timerz.cancel();
-        }
-
         final long scheduled_time = toDoItem.getDate().getTime();
-        final long smillis = scheduled_time % 1000;
-        final long ssecond = (scheduled_time / 1000) % 60;
-        final long sminute = (scheduled_time / (1000 * 60)) % 60;
-        final long shour = (scheduled_time / (1000 * 60 * 60)) % 24;
         final String aat= String.valueOf(scheduled_time);
         final double st =  Double.parseDouble(aat);
 
         final long when_scheduled = toDoItem.getSal_date();
-        final long millis = when_scheduled % 1000;
-        final long second = (when_scheduled / 1000) % 60;
-        final long minute = (when_scheduled / (1000 * 60)) % 60;
-        final long hour = (when_scheduled / (1000 * 60 * 60)) % 24;
         final String sst= String.valueOf(when_scheduled);
         final double ws =  Double.parseDouble(sst);
 
-        final long current_time = toDoItem.getCal_date();
-        final long cmillis = current_time % 1000;
-        final long csecond = (current_time/ 1000) % 60;
-        final long cminute = (current_time / (1000 * 60)) % 60;
-        final long chour = (current_time / (1000 * 60 * 60)) % 24;
-        final String cct= String.valueOf(current_time);
-        final double ct =  Double.parseDouble(cct);
-
-        final double a = ct-ws;//current- when scheduled
         final double b = st-ws; //scheduled - when scheduled
 
-        final double prog = (a/b)*10000000;
+        final double prog = b/1000;
         final int k = (int)prog;
 
-        final long period = 100;
-        timer=new Timer();
-        timer.schedule(new TimerTask() {
+        final long period = 1000;
+
+        holder.progressBar.setProgress(0);
+
+
+        if (holder.timer == null && toDoItem.getRunstatus()==0 ){
+        //TODO: classe Task qui implémente runnable
+
+            holder.timer=new Timer();
+
+            holder.timer.schedule(new TimerTask() {
+
+
+
             @Override
             public void run() {
-                //this repeats every 100 ms
-                if (i<1000000000){
-                    holder.progressBar.setProgress(i);
-                    i +=k;
-                }else{
-                    //closing the timer
-                    timer.cancel();
+                //this repeats every 1000 ms
+
+
+                if (holder.i<100 ){
+                    holder.progressBar.setProgress( (int) (100 / (prog) * holder.i) );
+                    toDoItem.setRunstatus( 1 );
+                    holder.i++;
                 }
-            }
-        }, 0, period);
 
-        holder.date.setText("prog"+k );
+                else{
+                    holder.timer.cancel();
+                }
 
-      /*  holder.timerz = new CountDownTimer(timerz, 100) {
-            public void onTick(long millisUntilFinished) {
 
-                holder.progressBar.setProgress((int)millisUntilFinished/1000);
-                holder.date.setText("a"+a+"b"+b+"prog"+prog+"long"+timerz );
             }
 
-            public void onFinish() {
-                holder.progressBar.setProgress(10);
-                holder.date.setText("a"+a+"b"+b+"prog"+prog+"long"+timerz);
-            }
-        }.start();*/
 
+        }, 0, period);}
 
-       /* int progress = toDoItem.getProgress();
-        ObjectAnimator progressAnimator = ObjectAnimator.ofInt(holder.progressBar, "progress", 0, progress);
-        progressAnimator.setDuration(1000);
-        progressAnimator.start();*/
+        holder.date.setText("prog"+prog + "ws" + ws);
+
 
     }
 
@@ -193,12 +161,13 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder  {
+        Timer timer;
         TextView title;
         CheckBox status;
         TextView priority;
         TextView date;
         ProgressBar progressBar;
-        CountDownTimer timerz;
+        int i;
 
         ViewHolder(View view) {
             super(view);

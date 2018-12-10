@@ -39,12 +39,6 @@ public class TaskManagerEquilibrium  extends Activity {
         lv2= findViewById(R.id.listview2);
         lv2.setLayoutManager(new LinearLayoutManager(this));
 
-        //Calendar c = Calendar.getInstance();
-
-
-       // current_time = c.getTimeInMillis();
-
-
 
 
         TextView footerView = (TextView) findViewById( R.id.footerView );
@@ -100,18 +94,11 @@ public class TaskManagerEquilibrium  extends Activity {
                 Task mToDoItem = new Task(data);
                 if(mToDoItem.getTitle().equalsIgnoreCase( "A" )){
                     mAdapter.add(mToDoItem);
-                    long current_time = Calendar.getInstance().getTimeInMillis();
-                    mToDoItem.setCal_date( current_time );
-
-
-
 
                 }
                 else if (mToDoItem.getTitle().equalsIgnoreCase( "B" )){
                     mAdapter2.add(mToDoItem);
-
                 }
-
                 else mAdapter.add(mToDoItem);
 
             } } }
