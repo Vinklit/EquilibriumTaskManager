@@ -151,13 +151,16 @@ public class MainActivity extends Activity {
                 Calendar cc = Calendar.getInstance();
                 long setdate = cc.getTimeInMillis();
 
+
+
                 Toast.makeText( MainActivity.this, "package"+caldate+""+setdate, Toast.LENGTH_LONG ).show();
 
 
                 // Package ToDoItem data into an Intent
                 Intent data = new Intent();
-                Task.packageIntent(data, titleString, priority, status, 0,
-                        fullDate, caldate, setdate);
+
+                Task.packageIntent(data, titleString, priority, status,
+                        fullDate, setdate);
                 setResult(RESULT_OK, data);
                 finish();
             }

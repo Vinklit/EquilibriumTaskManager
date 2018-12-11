@@ -3,6 +3,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -94,6 +95,8 @@ public class TaskManagerEquilibrium  extends Activity {
                 Task mToDoItem = new Task(data);
                 if(mToDoItem.getTitle().equalsIgnoreCase( "A" )){
                     mAdapter.add(mToDoItem);
+
+
 
                 }
                 else if (mToDoItem.getTitle().equalsIgnoreCase( "B" )){

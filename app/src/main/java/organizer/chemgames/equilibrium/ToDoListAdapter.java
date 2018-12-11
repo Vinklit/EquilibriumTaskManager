@@ -33,6 +33,8 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
     private List<Task> mData = new ArrayList<Task>();
     private LayoutInflater mInflater;
     private ItemClickListener listener;
+    int i;
+    Timer timer;
 
 
     // data is passed into the constructor
@@ -45,7 +47,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
     public ToDoListAdapter(TaskManagerEquilibrium context, ToDoListAdapter2.ItemClickListener itemClickListener) {
     }
 
-    public void add(Task item) {
+        public void add(Task item) {
         mData.add(item);
         notifyDataSetChanged(); }
 
@@ -84,7 +86,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
         return viewHolder;
     }
 
-    // binds the data to the TextView in each row
+    // binds the data to the View in each row
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Task toDoItem = mData.get(position);
@@ -103,55 +105,15 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
                 } }});
         holder.priority.setText(toDoItem.getPriority().toString());
         holder.date.setText(Task.FORMAT.format(toDoItem.getDate()));
-        final long scheduled_time = toDoItem.getDate().getTime();
-        final String aat= String.valueOf(scheduled_time);
-        final double st =  Double.parseDouble(aat);
 
-        final long when_scheduled = toDoItem.getSal_date();
-        final String sst= String.valueOf(when_scheduled);
-        final double ws =  Double.parseDouble(sst);
-
-        final double b = st-ws; //scheduled - when scheduled
-
-        final double prog = b/1000;
-        final int k = (int)prog;
-
-        final long period = 1000;
-
-        holder.progressBar.setProgress(0);
-
-
-        if (holder.timer == null && toDoItem.getRunstatus()==0 ){
-        //TODO: classe Task qui implémente runnable
-
-            holder.timer=new Timer();
-
-            holder.timer.schedule(new TimerTask() {
+        Timer timer = new Timer(  );
+        timer.schedule( toDoItem, 0, 1000  );
+        int k = toDoItem.getTimerProgress();
+        holder.progressBar.setProgress( k);
+        holder.date.setText(""+k );
 
 
 
-            @Override
-            public void run() {
-                //this repeats every 1000 ms
-
-
-                if (holder.i<100 ){
-                    holder.progressBar.setProgress( (int) (100 / (prog) * holder.i) );
-                    toDoItem.setRunstatus( 1 );
-                    holder.i++;
-                }
-
-                else{
-                    holder.timer.cancel();
-                }
-
-
-            }
-
-
-        }, 0, period);}
-
-        holder.date.setText("prog"+prog + "ws" + ws);
 
 
     }
@@ -161,13 +123,11 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder  {
-        Timer timer;
         TextView title;
         CheckBox status;
         TextView priority;
         TextView date;
         ProgressBar progressBar;
-        int i;
 
         ViewHolder(View view) {
             super(view);
