@@ -15,26 +15,33 @@ public class Task extends TimerTask {
         int i=0;
         int mfin=0;
         int progress;
+        String taskname = "Default name";
 
-        Task (int fin){
+        Task (int fin, String name ){
             this.mfin=fin;
+            this.taskname = name;
         }
 
     public void run() {
             if (i<mfin){
                 System.out.println("Time's up!"+i);
                 progress=i;
-                i++;
-            }else{
-                i = 0;
-            }
-        }
+                i++; }
+            else i =0; }
 
 
         public int getProgress (){
            return progress;
         }
+
+    public String getTaskname() {
+        return taskname;
     }
+
+    public void setTaskname(String taskname) {
+        this.taskname = taskname;
+    }
+}
 
 
 
