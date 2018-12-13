@@ -28,6 +28,13 @@
         android:layout_below="@id/TitleLabel"
         />
 
+
+    <Button
+        android:id="@+id/addtask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recyclerView"/>
+
  
 
 

@@ -26,13 +26,17 @@ public class Task extends TimerTask {
             if (i<mfin){
                 System.out.println("Time's up!"+i);
                 progress=i;
+                setProgress( i );
                 i++; }
             else i =0; }
 
 
-        public int getProgress (){
+    public int getProgress (){
            return progress;
         }
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
 
     public String getTaskname() {
         return taskname;

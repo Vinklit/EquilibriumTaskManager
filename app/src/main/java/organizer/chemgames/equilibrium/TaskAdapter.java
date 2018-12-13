@@ -7,19 +7,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
-    private ArrayList<Task> data;
+    private List<Task> data = new ArrayList<Task>();
     Context mContext;
+    private ItemClickListener listener;
 
 
-    public TaskAdapter(Context mContext, ArrayList<Task> data) {
+    public TaskAdapter(Context mContext, ArrayList<Task> data, ItemClickListener listener) {
         this.data = data;
         this.mContext = mContext;
+        this.listener = listener;
     }
+
+
+
+
 
     // Create new views (invoked by the layout manager)
     @Override
@@ -33,6 +39,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         // create ViewHolder
 
         final ViewHolder viewHolder = new ViewHolder(itemLayoutView);
+
+        itemLayoutView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            listener.onItemClick(v, viewHolder.getAdapterPosition());
+            }
+        });
         return viewHolder;
     }
 
@@ -78,6 +91,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public interface ItemClickListener {
+        public void onItemClick(View v, int position);
     }
 
 
