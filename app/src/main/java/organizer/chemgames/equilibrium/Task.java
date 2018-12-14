@@ -11,28 +11,22 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class Task {
+public class Task extends TimerTask {
         int i=0;
         int mfin=0;
         int progress;
         String taskname = "Default name";
         Timer timer;
         TimerTask timerTask;
-        boolean runstatus;
 
 
-        Task (int mfin, String name, boolean runstatus){
+        Task (int mfin, String name){
             this.mfin=mfin;
             this.taskname = name;
-            this.runstatus = runstatus;
         }
 
 
 
-
-    public Timer getTimer(){
-        timer = new Timer();
-        timerTask = new TimerTask() {
             @Override
             public void run() {
                 if (i<mfin){
@@ -42,9 +36,6 @@ public class Task {
                     i++; }
                 else i =0;
             }
-        }; timer.schedule(timerTask, 0, 1000);
-        return timer;
-    }
 
     public int getEnd (){
         return mfin;
@@ -58,13 +49,6 @@ public class Task {
         }
     public void setProgress(int progress) {
         this.progress = progress;
-    }
-
-    public boolean getRunstatus (){
-        return runstatus;
-    }
-    public void setRunstatus(boolean runstatus) {
-        this.runstatus = runstatus;
     }
 
 

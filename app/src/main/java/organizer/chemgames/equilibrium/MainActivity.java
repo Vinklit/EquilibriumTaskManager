@@ -36,12 +36,14 @@ public class MainActivity extends Activity {
 
             @Override
             public void onItemClick(View v, int position) {
-                //onItemClick doesn't work while UI thread is running
-                Toast.makeText( MainActivity.this, "Clicked on "+position, Toast.LENGTH_LONG ).show();
-                Timer ti = data.get(position).getTimer();
-                ti.cancel();
-                //timer doesn't stop unless "else i=0" removed!!!!
-                ti.purge();
+                timer.cancel();
+                timer.purge();
+                //timer cancels only for one item;
+                //timer doesn't stop unless "else i=0" removed,
+                //if previous item is removed, the timer stops
+                //if removed in the same order than added, it's ok, just the last digit moves
+                //link timer to the position or task
+                Toast.makeText( MainActivity.this, "purge called", Toast.LENGTH_LONG ).show();
                 deleteItem (position);
             }
         }  ) ;
@@ -52,23 +54,18 @@ public class MainActivity extends Activity {
         add.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Task t = new Task(10, "Task3", false);
-                addtask( t);
-                if (!t.getRunstatus()){
-                    t.getTimer();
-
+              final Task t = new Task(10, "Task3");
+              addtask( t);
+              timer = new Timer();
+              timer.schedule (t, 0, 1000);
                 Thread  thr  = new Thread() {
                     @Override
                     public void run() {
-
                         while (t.getProgress() < t.getEnd()-1) {
-                 //here has to be individual for each thread, or put a lock on a thread, otherwise synchronized for last one
                             runOnUiThread( new Runnable() {
-
                                 @Override
                                 public void run() {
-                                    //TODO: if thread != null (???)
-                                    adapter.notifyDataSetChanged();
+                                    adapter.notifyItemChanged(data.indexOf( t ) );
                                 }} );
                             try {
                                 //sort of works if thread sleeps for >3s
@@ -77,7 +74,6 @@ public class MainActivity extends Activity {
                                 e.printStackTrace();
                             } }
                     }}; thr.start();
-                    t.setRunstatus( true );}
             }} );
 
         recyclerView.setAdapter(adapter);
@@ -88,7 +84,7 @@ public class MainActivity extends Activity {
 
     public void addtask(Task item) {
         data.add(item);
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemInserted( data.indexOf( item ) );
         }
 
 
@@ -100,7 +96,7 @@ public class MainActivity extends Activity {
 
     private void initializeData() {
         data = new ArrayList<>();
-        data.add( new Task(10, "Default_stopped", false));
+        data.add( new Task(10, "Default_stopped"));
     }
 
 
