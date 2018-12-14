@@ -58,6 +58,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         Task currentItem = (Task) getItem(position);
         viewHolder.itemName.setText(currentItem.getTaskname());
         viewHolder.progress.setText(""+currentItem.getProgress());
+        viewHolder.runstatus.setText(""+currentItem.getRunstatus());
         viewHolder.progressBar.setProgress(currentItem.getProgress());
     }
 
@@ -76,6 +77,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
        TextView itemName;
        TextView progress;
+        TextView runstatus;
        ProgressBar progressBar;
 
 
@@ -83,6 +85,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             super(itemLayoutView);
             itemName = (TextView)itemLayoutView.findViewById( R.id.title );
             progress = (TextView)itemLayoutView.findViewById( R.id.progress );
+            runstatus = (TextView)itemLayoutView.findViewById( R.id.runstatus );
             progressBar = (ProgressBar)itemLayoutView.findViewById( R.id.progressbar );
 
         }

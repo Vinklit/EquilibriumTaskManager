@@ -1,9 +1,5 @@
 package organizer.chemgames.equilibrium;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Timer;
 
 import android.app.Activity;
@@ -13,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -20,40 +17,34 @@ public class MainActivity extends Activity {
 
     private ArrayList<Task> data;
     TaskAdapter adapter;
-    Timer myTimers[];
-    Thread myThreads[];
-    int j;
-    int progress;
+    Timer timer;
     Button add;
-
+    TextView titlelabel;
+    Thread t;
+    int i = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        titlelabel = (TextView)findViewById( R.id.TitleLabel );
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         initializeData();
-        //schedule default data
-       /* myTimers = new Timer[data.size()];
-        for (int z = 0; z < data.size(); z++){
-            myTimers[z] = new Timer();
-            myTimers[z].schedule(data.get(z), 0, 1000);
-        }*/
-
-
-
 
         adapter = new TaskAdapter(MainActivity.this, data, new TaskAdapter.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
+                //onItemClick doesn't work while UI thread is running
+                Toast.makeText( MainActivity.this, "Clicked on "+position, Toast.LENGTH_LONG ).show();
+                Timer ti = data.get(position).getTimer();
+                ti.cancel();
+                //timer doesn't stop unless "else i=0" removed!!!!
+                ti.purge();
                 deleteItem (position);
-                Toast.makeText( MainActivity.this, "Clicked"+position, Toast.LENGTH_LONG ).show();
             }
         }  ) ;
-        recyclerView.setAdapter(adapter);
-
 
 
 
@@ -61,36 +52,45 @@ public class MainActivity extends Activity {
         add.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Task t = new Task(5, "Task3");
+                final Task t = new Task(10, "Task3", false);
                 addtask( t);
-                scheduletask( t );
+                if (!t.getRunstatus()){
+                    t.getTimer();
+
+                Thread  thr  = new Thread() {
+                    @Override
+                    public void run() {
+
+                        while (t.getProgress() < t.getEnd()-1) {
+                 //here has to be individual for each thread, or put a lock on a thread, otherwise synchronized for last one
+                            runOnUiThread( new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    //TODO: if thread != null (???)
+                                    adapter.notifyDataSetChanged();
+                                }} );
+                            try {
+                                //sort of works if thread sleeps for >3s
+                                Thread.sleep( 100 );
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } }
+                    }}; thr.start();
+                    t.setRunstatus( true );}
             }} );
 
-
-
+        recyclerView.setAdapter(adapter);
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        myThreads = new Thread[data.size()];
-        for (int z = 0; z < data.size(); z++){
-            launchThread(myThreads[z] );
-        }
-    }
 
-
-
-    public void scheduletask(Task item) {
-        Timer t = new Timer();
-        t.schedule( item, 0, 1000 );
-    }
 
     public void addtask(Task item) {
         data.add(item);
         adapter.notifyDataSetChanged();
         }
+
 
     public void deleteItem(int position) {
        data.remove(position);
@@ -98,27 +98,9 @@ public class MainActivity extends Activity {
     }
 
 
-    public void launchThread(Thread t ){
-        t = new Thread( ) {
-            @Override
-            public void run() {
-            while (true){
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    adapter.notifyDataSetChanged(); }
-                });
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } } }};
-            t.start();}
-
-
     private void initializeData() {
         data = new ArrayList<>();
-        data.add( new Task(10, "Default"));
+        data.add( new Task(10, "Default_stopped", false));
     }
 
 
