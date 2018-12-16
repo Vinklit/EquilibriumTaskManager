@@ -11,7 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class Task extends TimerTask {
+public class Task {
         int i=0;
         int mfin=0;
         int progress;
@@ -27,6 +27,9 @@ public class Task extends TimerTask {
 
 
 
+    public Timer launchTimer(){
+        timer = new Timer();
+        timerTask = new TimerTask() {
             @Override
             public void run() {
                 if (i<mfin){
@@ -36,6 +39,15 @@ public class Task extends TimerTask {
                     i++; }
                 else i =0;
             }
+        }; timer.schedule(timerTask, 0, 1000);
+        return timer;
+    }
+
+    public void cancelTimer (){
+           timer.cancel();
+           timer.purge();
+    }
+
 
     public int getEnd (){
         return mfin;
@@ -50,7 +62,6 @@ public class Task extends TimerTask {
     public void setProgress(int progress) {
         this.progress = progress;
     }
-
 
     public String getTaskname() {
         return taskname;
