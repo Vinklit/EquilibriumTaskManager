@@ -12,22 +12,40 @@ import java.util.TimerTask;
 
 
 public class Task {
+    public final static String NAME = "name";
+    public final static String END = "end";
+    public final static String DATE = "date";
+
         int i=0;
-        int mfin=0;
-        int progress;
-        String taskname = "Default name";
+        int progress=0;
         Timer timer;
         TimerTask timerTask;
 
+        String taskname = new String();
+        int mfin=0;
+    public final static SimpleDateFormat FORMAT = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss", Locale.US);
+    private Date mDate = new Date();
 
-        Task (int mfin, String name){
-            this.mfin=mfin;
+
+        Task (String name, int mfin, Date date){
             this.taskname = name;
+            this.mfin=mfin;
+            this.mDate = date;
         }
 
+    Task(Intent intent) {
+        taskname = intent.getStringExtra(Task.NAME);
+        mfin = intent.getIntExtra(Task.END, 0  );
+        try {
+            mDate = Task.FORMAT.parse(intent.getStringExtra(Task.DATE));
+        } catch (ParseException e) {
+            mDate = new Date();
+        } }
 
 
-    public Timer launchTimer(){
+
+   public Timer launchTimer(){
         timer = new Timer();
         timerTask = new TimerTask() {
             @Override
@@ -68,6 +86,22 @@ public class Task {
     }
     public void setTaskname(String taskname) {
         this.taskname = taskname;
+    }
+
+    public Date getDate() {
+        return mDate; }
+
+    public void setDate(Date date) {
+        mDate = date; }
+
+
+
+    public static void packageIntent(Intent intent, String name, int mfin, String date) {
+
+        intent.putExtra(Task.NAME, name);
+        intent.putExtra(Task.END, mfin);
+        intent.putExtra(Task.DATE, date);
+
     }
 
 }

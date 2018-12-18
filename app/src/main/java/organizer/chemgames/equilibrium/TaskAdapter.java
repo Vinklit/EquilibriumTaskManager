@@ -13,14 +13,16 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<Task> data = new ArrayList<Task>();
-    Context mContext;
+    private LayoutInflater mInflater;
     private ItemClickListener listener;
 
 
-    public TaskAdapter(Context mContext, ArrayList<Task> data, ItemClickListener listener) {
-        this.data = data;
-        this.mContext = mContext;
+    TaskAdapter(Context context, ItemClickListener listener) {
+        this.mInflater = LayoutInflater.from(context);
         this.listener = listener;
+    }
+
+    public TaskAdapter(MainActivity context) {
     }
 
 
@@ -29,21 +31,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     // Create new views (invoked by the layout manager)
     @Override
-    public TaskAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                          int viewType) {
-        // create a new view
-        View itemLayoutView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.taskitem, null);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.taskitem, parent, false);
+        final ViewHolder viewHolder = new ViewHolder(view);
 
-
-        // create ViewHolder
-
-        final ViewHolder viewHolder = new ViewHolder(itemLayoutView);
-
-        itemLayoutView.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            listener.onItemClick(v, viewHolder.getAdapterPosition());
+                listener.onItemClick(v, viewHolder.getAdapterPosition());
             }
         });
         return viewHolder;
@@ -51,19 +46,36 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
 
         // - get data from your itemsData at this position
         // - replace the contents of the view with that itemsData
-        Task currentItem = (Task) getItem(position);
+        Task currentItem = data.get(position);
         viewHolder.itemName.setText(currentItem.getTaskname());
         viewHolder.progress.setText(""+currentItem.getProgress());
         viewHolder.progressBar.setProgress(currentItem.getProgress());
+        viewHolder.date.setText(""+currentItem.getDate());
     }
 
 
-    public Object getItem(int position) {
+    public Task getItem(int position) {
         return data.get(position); //returns the item at the specified position
+    }
+
+    public void add(Task item) {
+        data.add(item);
+        notifyDataSetChanged();
+    }
+
+
+    public void deleteItem(int position) {
+        data.remove(position);
+        notifyItemRemoved(position); }
+
+
+    public int index (Task item) {
+       int i =  data.indexOf( item );
+       return i;
     }
 
     @Override
@@ -76,7 +88,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
        TextView itemName;
        TextView progress;
-        TextView runstatus;
+       TextView date;
        ProgressBar progressBar;
 
 
@@ -84,7 +96,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             super(itemLayoutView);
             itemName = (TextView)itemLayoutView.findViewById( R.id.title );
             progress = (TextView)itemLayoutView.findViewById( R.id.progress );
-            runstatus = (TextView)itemLayoutView.findViewById( R.id.runstatus );
+            date = (TextView)itemLayoutView.findViewById( R.id.runstatus );
             progressBar = (ProgressBar)itemLayoutView.findViewById( R.id.progressbar );
 
         }
