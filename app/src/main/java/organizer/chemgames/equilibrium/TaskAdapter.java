@@ -22,12 +22,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         this.listener = listener;
     }
 
-    public TaskAdapter(MainActivity context) {
-    }
-
-
-
-
 
     // Create new views (invoked by the layout manager)
     @Override
@@ -54,7 +48,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         viewHolder.itemName.setText(currentItem.getTaskname());
         viewHolder.progress.setText(""+currentItem.getProgress());
         viewHolder.progressBar.setProgress(currentItem.getProgress());
-        viewHolder.date.setText(""+currentItem.getDate());
+        viewHolder.date.setText(Task.FORMAT.format(currentItem.getDate()));
     }
 
 

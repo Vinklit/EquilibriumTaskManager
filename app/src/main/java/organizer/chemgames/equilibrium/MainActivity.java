@@ -15,12 +15,15 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
+    //TODO: consommation de RAM en temps réel
+
     private static final int REQUEST = 0;
 
     TaskAdapter adapter;
     Button add;
     TextView titlelabel;
     RecyclerView recyclerView;
+    Thread  thr;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,23 +60,19 @@ public class MainActivity extends Activity {
 
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == REQUEST){
             if (resultCode == RESULT_OK){
                final Task t = new Task(intent);
-                adapter.add(t);
+               adapter.add(t);
                  t.launchTimer();
-                 Thread  thr  = new Thread() {
+                 thr  = new Thread() {
             @Override
             public void run() {
-                //TODO: sometimes progress goes to 14 instead of 13
-                //TODO: check methods getProgress() and getEnd(), something is odd
                 //TODO: the progress continues once you leave the activity: The thread should only be launched onResume, stopped onPause
 
-                while (t.getProgress() < t.getEnd()-1) {
+                while (t.getProgress() < 100) {
                     runOnUiThread( new Runnable() {
                         @Override
                         public void run() {
@@ -85,10 +84,24 @@ public class MainActivity extends Activity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } }
+                    t.setProgress(100 );
                     t.cancelTimer();
-            }}; thr.start();
 
-            } } }
+            }}; thr.start(); } } }
 
 
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        }
+
+    @Override
+    protected void onPause() {
+        super.onPause(); }
 }
+
+
+
+
