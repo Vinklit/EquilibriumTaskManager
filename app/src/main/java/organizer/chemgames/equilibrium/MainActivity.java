@@ -1,11 +1,14 @@
 package organizer.chemgames.equilibrium;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Timer;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,10 +20,14 @@ public class MainActivity extends Activity {
 
     //TODO: consommation de RAM en temps réel
 
+    //TODO: Floating action button (coursera)
+
+    //TODO: Sort tasks
+
     private static final int REQUEST = 0;
 
     TaskAdapter adapter;
-    Button add;
+    FloatingActionButton add;
     TextView titlelabel;
     RecyclerView recyclerView;
     Thread  thr;
@@ -47,7 +54,7 @@ public class MainActivity extends Activity {
 
 
 
-        add = (Button)findViewById( R.id.addtask );
+        add = (FloatingActionButton)findViewById( R.id.addtask );
         add.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +62,6 @@ public class MainActivity extends Activity {
                 startActivityForResult( mAddNewToDoIntent, REQUEST );
             }} );
         recyclerView.setAdapter(adapter);
-
     }
 
 
@@ -66,13 +72,11 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK){
                final Task t = new Task(intent);
                adapter.add(t);
-                 t.launchTimer();
-                 thr  = new Thread() {
+               t.launchTimer();
+               thr  = new Thread() {
             @Override
             public void run() {
-                //TODO: the progress continues once you leave the activity: The thread should only be launched onResume, stopped onPause
-
-                while (t.getProgress() < 100) {
+                while (t.getProgress() < 100 && t.getProgress() >=0) {
                     runOnUiThread( new Runnable() {
                         @Override
                         public void run() {
@@ -84,9 +88,7 @@ public class MainActivity extends Activity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } }
-                    t.setProgress(100 );
                     t.cancelTimer();
-
             }}; thr.start(); } } }
 
 
@@ -100,6 +102,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause(); }
+
+
+
+
+
+
 }
 
 

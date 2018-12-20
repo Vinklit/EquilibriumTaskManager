@@ -22,11 +22,9 @@ public class Task {
         int progress;
         Timer timer;
         TimerTask timerTask;
-
         String taskname = new String();
         int mfin=0;
-    public final static SimpleDateFormat FORMAT = new SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss", Locale.US);
+    public final static SimpleDateFormat FORMAT = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.US);
     private Date mDate = new Date();
     private long mset_date = 0;
     private long mcal_date = 0;
@@ -58,10 +56,8 @@ public class Task {
     public double getProg() {
         final String aat = String.valueOf( mcal_date );
         final double st = Double.parseDouble( aat );
-
         final String sst = String.valueOf( mset_date );
         final double ws = Double.parseDouble( sst );
-
         final double b = ws-st;  //scheduled - current
         final double prog = b / 1000;
         return prog;
@@ -75,15 +71,10 @@ public class Task {
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                //TODO: i < maximum possible time (1 year) (or progress), seems like it is the same counter
-                // TODO: but individual timers can be stopped from UI thread :)
-                //TODO: because of double, small delay between the tasks
-                if (i<1000){
+                //maximum duration: 1 year
+                if (i<32000000){
                     System.out.println("Time's up!"+i);
-                    if ((int) (100 / (getProg()) * i)<100) {
                         setProgress( (int) (100 / (getProg()) * i) );
-                    }
-                    else  setProgress(100 );
                     i++; }
             }
         }; timer.schedule(timerTask, 0, 1000);
@@ -119,22 +110,6 @@ public class Task {
 
     public void setDate(Date date) {
         mDate = date; }
-
-    public long getSet_date() {
-        return mset_date;
-    }
-
-    public void setSet_date(int set_date) {
-        mset_date = set_date;
-    }
-
-    public long getCal_date() {
-        return mcal_date;
-    }
-
-    public void setCal_date(int cal_date) {
-        mcal_date = cal_date;
-    }
 
 
 
