@@ -22,8 +22,6 @@ public class MainActivity extends Activity {
 
     //TODO: Floating action button (coursera)
 
-    //TODO: Sort tasks
-
     private static final int REQUEST = 0;
 
     TaskAdapter adapter;

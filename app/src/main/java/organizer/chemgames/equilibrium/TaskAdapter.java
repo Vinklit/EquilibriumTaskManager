@@ -14,6 +14,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+//TODO: sort by treemap
+
+
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<Task> data= new ArrayList<Task>();
@@ -52,14 +55,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-
-
-
-
-
         Task currentItem = data.get(position);
         viewHolder.itemName.setText(currentItem.getTaskname());
-        if (currentItem.getProgress()<99 && currentItem.getProgress()>=0) {
+        if (currentItem.getProgress()<99 && currentItem.getProg()>0) {
             viewHolder.progress.setText( "" + currentItem.getProgress() );
             viewHolder.progressBar.setProgress(currentItem.getProgress());
         } else  {viewHolder.progress.setText( "completed" + 100 );
@@ -74,20 +72,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public void add(Task item) {
-        //when it changes position (placed before), it doesn't update on ui thread
-        //TODO: notify update item for a particular position
-
         data.add(item);
+        int pos = index( item );
         notifyDataSetChanged();
+        notifyItemChanged( pos );
         Collections.sort(data, new Comparator<Task>() {
             @Override
-            public int compare(Task fruit2, Task fruit1)
-            {
-                return  fruit1.getTaskname().compareTo(fruit2.getTaskname());
-            }
+
+            // 1. Sort depending on name, can also be by task type (daily, weekly, monthly...) or priority
+           /* public int compare(Task t1, Task t2)
+            { return  t1.getTaskname().compareTo(t2.getTaskname()); }*/
+
+           // 2. Sort by "urgency"
+            public int compare(Task t1, Task t2)
+            {   int i1 = (int)t1.getProg();
+                int i2 = (int)t2.getProg();
+                return ((Integer)i1).compareTo(i2); }
         });
-
-
     }
 
 
