@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import java.text.ParseException;
@@ -36,14 +38,21 @@ public class AddTask extends Activity {
     private Date date;
     private EditText title;
 
+    private RadioGroup categoryGroup;
+    private RadioButton defaultCategoryButton;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_activity);
         title = (EditText) findViewById(R.id.title);
-
         t_date = (TextView) findViewById(R.id.date);
         t_time = (TextView) findViewById(R.id.time);
+        categoryGroup = (RadioGroup)findViewById( R.id.categoryGroup );
+        defaultCategoryButton = (RadioButton)findViewById( R.id.other );
+
         // Default is current time
         date = new Date();
         date = new Date(date.getTime());
@@ -82,6 +91,30 @@ public class AddTask extends Activity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+              Task.Category category = null;
+                switch (categoryGroup.getCheckedRadioButtonId()){
+                    case R.id.social:
+                        category = Task.Category.FAM;
+                        break;
+                    case  R.id.professionnal:
+                        category = Task.Category.PROF;
+                        break;
+                    case  R.id.education:
+                        category = Task.Category.EDUC;
+                        break;
+                    case R.id.sport:
+                        category = Task.Category.SPORT;
+                        break;
+                    case  R.id.hobbies:
+                        category = Task.Category.HOBB;
+                        break;
+                    case  R.id.other:
+                        category = Task.Category.OTHER;
+                        break; }
+
+
+
                 String titleString = title.getText().toString();
                 String wholeDate = s_date + " " + s_time;
                 SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.US);
@@ -93,7 +126,7 @@ public class AddTask extends Activity {
 
                 // Package data to send to main
                 Intent intent = new Intent();
-                Task.packageIntent(intent, titleString, 15, wholeDate, setdate, caldate);
+                Task.packageIntent(intent, category,  titleString, wholeDate, setdate, caldate);
                 setResult(RESULT_OK, intent);
                 finish();
             }});

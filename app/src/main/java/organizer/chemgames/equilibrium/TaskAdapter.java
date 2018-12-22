@@ -14,9 +14,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-//TODO: sort by treemap
-
-
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<Task> data= new ArrayList<Task>();
@@ -27,32 +24,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     TaskAdapter(Context context, ItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
-        this.listener = listener;
-
-
-
-    }
+        this.listener = listener; }
 
 
 
 
-
-    // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.taskitem, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
-
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(v, viewHolder.getAdapterPosition());
             }
-        });
-        return viewHolder;
+        });return viewHolder;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         Task currentItem = data.get(position);

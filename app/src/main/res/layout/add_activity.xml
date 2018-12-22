@@ -44,32 +44,53 @@
             android:id="@+id/social"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Family/Friends" />
+            android:text="Family and Social Activities" />
 
         <RadioButton
             android:id="@+id/professionnal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Professionnal" />
+            android:text="Professionnal Tasks" />
 
         <RadioButton
             android:id="@+id/education"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Education" />
+            android:text="Education and Personal Development" />
 
         <RadioButton
             android:id="@+id/sport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sport and wellbeing" />
+            android:text="Sport and Wellbeing" />
 
         <RadioButton
             android:id="@+id/hobbies"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hobbies" />
+            android:text="Hobbies and Personal Projects" />
+
+        <RadioButton
+            android:id="@+id/other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Other Category"
+            />
+
     </RadioGroup>
+
+
+    <EditText
+        android:id="@+id/other_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/categoryGroup"
+        android:ems="10"
+        android:hint="Enter your category here"
+        android:inputType="textShortMessage">
+
+    </EditText>
 
     <!-- Priority -->
 
@@ -79,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/categoryGroup"
+        android:layout_below="@id/other_text"
         android:layout_marginTop="5dp"
         android:text="Priority"
         android:textAppearance="?android:attr/textAppearanceLarge" />
