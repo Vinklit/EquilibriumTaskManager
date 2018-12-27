@@ -1,8 +1,4 @@
 package organizer.chemgames.equilibrium;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Timer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,8 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 
 public class MainActivity extends Activity {
@@ -30,12 +24,12 @@ public class MainActivity extends Activity {
 
     private static final int REQUEST = 0;
 
-    TaskAdapter adapter_fam;
-    TaskAdapter adapter_prof;
-    TaskAdapter adapter_educ;
-    TaskAdapter adapter_sport;
-    TaskAdapter adapter_hobb;
-    TaskAdapter adapter_other;
+    TaskAdapter_fam adapter_fam;
+    TaskAdapter_prof adapter_prof;
+    TaskAdapter_educ adapter_educ;
+    TaskAdapter_sport adapter_sport;
+    TaskAdapter_hobb adapter_hobb;
+    TaskAdapter_other adapter_other;
 
     FloatingActionButton add;
 
@@ -67,7 +61,7 @@ public class MainActivity extends Activity {
         recyclerView_other = (RecyclerView) findViewById(R.id.recyclerView_other);
         recyclerView_other.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter_fam = new TaskAdapter(this, new TaskAdapter.ItemClickListener(){
+        adapter_fam = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
@@ -75,7 +69,7 @@ public class MainActivity extends Activity {
                 adapter_fam.deleteItem (position); }}  ) ;
         recyclerView_fam.setAdapter(adapter_fam);
 
-        adapter_prof = new TaskAdapter(this, new TaskAdapter.ItemClickListener(){
+        adapter_prof = new TaskAdapter_prof(this, new TaskAdapter_prof.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
@@ -83,7 +77,7 @@ public class MainActivity extends Activity {
                 adapter_prof.deleteItem (position); }}  ) ;
         recyclerView_prof.setAdapter(adapter_prof);
 
-        adapter_educ = new TaskAdapter(this, new TaskAdapter.ItemClickListener(){
+        adapter_educ = new TaskAdapter_educ(this, new TaskAdapter_educ.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
@@ -91,7 +85,7 @@ public class MainActivity extends Activity {
                 adapter_educ.deleteItem (position); }}  ) ;
         recyclerView_educ.setAdapter(adapter_educ);
 
-        adapter_sport = new TaskAdapter(this, new TaskAdapter.ItemClickListener(){
+        adapter_sport = new TaskAdapter_sport(this, new TaskAdapter_sport.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
@@ -99,7 +93,7 @@ public class MainActivity extends Activity {
                 adapter_sport.deleteItem (position); }}  ) ;
         recyclerView_sport.setAdapter(adapter_sport);
 
-        adapter_hobb = new TaskAdapter(this, new TaskAdapter.ItemClickListener(){
+        adapter_hobb = new TaskAdapter_hobb(this, new TaskAdapter_hobb.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
@@ -107,7 +101,7 @@ public class MainActivity extends Activity {
                 adapter_hobb.deleteItem (position); }}  ) ;
         recyclerView_hobb.setAdapter(adapter_hobb);
 
-        adapter_other = new TaskAdapter(this, new TaskAdapter.ItemClickListener(){
+        adapter_other = new TaskAdapter_other(this, new TaskAdapter_other.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
@@ -162,9 +156,8 @@ public class MainActivity extends Activity {
                    thr.start();
                }
 
-               //TODO: update
                 else if(t.getCategory()==Task.Category.PROF) {
-                    adapter_fam.add( t );
+                    adapter_prof.add( t );
                     t.launchTimer();
                     thr = new Thread() {
                         @Override
@@ -173,8 +166,8 @@ public class MainActivity extends Activity {
                                 runOnUiThread( new Runnable() {
                                     @Override
                                     public void run() {
-                                        adapter_fam.notifyItemChanged( adapter_fam.index( t ) );
-                                        recyclerView_fam.setItemAnimator( null );
+                                        adapter_prof.notifyItemChanged( adapter_prof.index( t ) );
+                                        recyclerView_prof.setItemAnimator( null );
                                     }
                                 } );
                                 try {
@@ -188,6 +181,136 @@ public class MainActivity extends Activity {
                     };
                     thr.start();
                 }
+
+               else if(t.getCategory()==Task.Category.EDUC) {
+                   adapter_educ.add( t );
+                   t.launchTimer();
+                   thr = new Thread() {
+                       @Override
+                       public void run() {
+                           while (t.getProgress() < 100 && t.getProgress() >= 0) {
+                               runOnUiThread( new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       adapter_educ.notifyItemChanged( adapter_educ.index( t ) );
+                                       recyclerView_educ.setItemAnimator( null );
+                                   }
+                               } );
+                               try {
+                                   Thread.sleep( 100 );
+                               } catch (InterruptedException e) {
+                                   e.printStackTrace();
+                               }
+                           }
+                           t.cancelTimer();
+                       }
+                   };
+                   thr.start();
+               }
+
+               else if(t.getCategory()==Task.Category.SPORT) {
+                   adapter_sport.add( t );
+                   t.launchTimer();
+                   thr = new Thread() {
+                       @Override
+                       public void run() {
+                           while (t.getProgress() < 100 && t.getProgress() >= 0) {
+                               runOnUiThread( new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       adapter_sport.notifyItemChanged( adapter_sport.index( t ) );
+                                       recyclerView_sport.setItemAnimator( null );
+                                   }
+                               } );
+                               try {
+                                   Thread.sleep( 100 );
+                               } catch (InterruptedException e) {
+                                   e.printStackTrace();
+                               }
+                           }
+                           t.cancelTimer();
+                       }
+                   };
+                   thr.start();
+               }
+
+               else if(t.getCategory()==Task.Category.HOBB) {
+                   adapter_hobb.add( t );
+                   t.launchTimer();
+                   thr = new Thread() {
+                       @Override
+                       public void run() {
+                           while (t.getProgress() < 100 && t.getProgress() >= 0) {
+                               runOnUiThread( new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       adapter_hobb.notifyItemChanged( adapter_hobb.index( t ) );
+                                       recyclerView_hobb.setItemAnimator( null );
+                                   }
+                               } );
+                               try {
+                                   Thread.sleep( 100 );
+                               } catch (InterruptedException e) {
+                                   e.printStackTrace();
+                               }
+                           }
+                           t.cancelTimer();
+                       }
+                   };
+                   thr.start();
+               }
+
+               else if(t.getCategory()==Task.Category.OTHER) {
+                   adapter_other.add( t );
+                   t.launchTimer();
+                   thr = new Thread() {
+                       @Override
+                       public void run() {
+                           while (t.getProgress() < 100 && t.getProgress() >= 0) {
+                               runOnUiThread( new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       adapter_other.notifyItemChanged( adapter_other.index( t ) );
+                                       recyclerView_other.setItemAnimator( null );
+                                   }
+                               } );
+                               try {
+                                   Thread.sleep( 100 );
+                               } catch (InterruptedException e) {
+                                   e.printStackTrace();
+                               }
+                           }
+                           t.cancelTimer();
+                       }
+                   };
+                   thr.start();
+               }
+
+               else  {
+                   adapter_other.add( t );
+                   t.launchTimer();
+                   thr = new Thread() {
+                       @Override
+                       public void run() {
+                           while (t.getProgress() < 100 && t.getProgress() >= 0) {
+                               runOnUiThread( new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       adapter_other.notifyItemChanged( adapter_other.index( t ) );
+                                       recyclerView_other.setItemAnimator( null );
+                                   }
+                               } );
+                               try {
+                                   Thread.sleep( 100 );
+                               } catch (InterruptedException e) {
+                                   e.printStackTrace();
+                               }
+                           }
+                           t.cancelTimer();
+                       }
+                   };
+                   thr.start();
+               }
 
 
             //if else statement ends here

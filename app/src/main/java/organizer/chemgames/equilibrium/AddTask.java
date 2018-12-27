@@ -95,7 +95,7 @@ public class AddTask extends Activity {
               Task.Category category = null;
                 switch (categoryGroup.getCheckedRadioButtonId()){
                     case R.id.social:
-                        category = Task.Category.FAM;
+                        category = Task.Category.FAM ;
                         break;
                     case  R.id.professionnal:
                         category = Task.Category.PROF;

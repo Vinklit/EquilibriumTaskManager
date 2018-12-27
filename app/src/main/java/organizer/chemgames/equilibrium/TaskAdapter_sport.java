@@ -1,28 +1,27 @@
 package organizer.chemgames.equilibrium;
 
 import android.content.Context;
-import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+public class TaskAdapter_sport extends RecyclerView.Adapter<TaskAdapter_sport.ViewHolder> {
     private List<Task> data= new ArrayList<Task>();
     private LayoutInflater mInflater;
     private ItemClickListener listener;
 
 
 
-    TaskAdapter(Context context, ItemClickListener listener) {
+    TaskAdapter_sport(Context context, ItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
         this.listener = listener; }
 
