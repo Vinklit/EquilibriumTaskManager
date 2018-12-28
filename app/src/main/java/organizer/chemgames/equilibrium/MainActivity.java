@@ -9,18 +9,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import java.util.Calendar;
+
 
 public class MainActivity extends Activity {
 
-    //TODO: consommation de RAM en temps réel
-
-    //TODO: Floating action button (coursera)
+    //TODO: make fragments with daily, weekly, monthly, full overview of progress
 
     //TODO: swipe to delete (left) or reschedule (right) with dialog box
 
+    //TODO: Floating action button (coursera)
+
     //TODO: sort by treemap
 
-    //TODO: make fragments with daily, weekly, monthly, full overview of progress
+    //TODO: consommation de RAM en temps réel
+
+
 
     private static final int REQUEST = 0;
 
@@ -128,11 +132,21 @@ public class MainActivity extends Activity {
         if (requestCode == REQUEST){
             if (resultCode == RESULT_OK){
                final Task t = new Task(intent);
+                Calendar cc = Calendar.getInstance();
+                long timenow = cc.getTimeInMillis();
+                long del = t.getMcal_date()-timenow;
 
                //if else statement goes here
                if(t.getCategory()==Task.Category.FAM) {
                    adapter_fam.add( t );
-                   t.launchTimer();
+
+
+
+            if (timenow >= t.getMcal_date()){
+                t.launchTimer();
+            }
+            else t.launchTimerwithDelay( del );
+
                    thr = new Thread() {
                        @Override
                        public void run() {
@@ -154,11 +168,18 @@ public class MainActivity extends Activity {
                        }
                    };
                    thr.start();
+
+
+
+
                }
 
                 else if(t.getCategory()==Task.Category.PROF) {
                     adapter_prof.add( t );
-                    t.launchTimer();
+                   if (timenow >= t.getMcal_date()){
+                       t.launchTimer();
+                   }
+                   else t.launchTimerwithDelay( del );
                     thr = new Thread() {
                         @Override
                         public void run() {
@@ -184,7 +205,10 @@ public class MainActivity extends Activity {
 
                else if(t.getCategory()==Task.Category.EDUC) {
                    adapter_educ.add( t );
-                   t.launchTimer();
+                   if (timenow >= t.getMcal_date()){
+                       t.launchTimer();
+                   }
+                   else t.launchTimerwithDelay( del );
                    thr = new Thread() {
                        @Override
                        public void run() {
@@ -210,7 +234,10 @@ public class MainActivity extends Activity {
 
                else if(t.getCategory()==Task.Category.SPORT) {
                    adapter_sport.add( t );
-                   t.launchTimer();
+                   if (timenow >= t.getMcal_date()){
+                       t.launchTimer();
+                   }
+                   else t.launchTimerwithDelay( del );
                    thr = new Thread() {
                        @Override
                        public void run() {
@@ -236,7 +263,10 @@ public class MainActivity extends Activity {
 
                else if(t.getCategory()==Task.Category.HOBB) {
                    adapter_hobb.add( t );
-                   t.launchTimer();
+                   if (timenow >= t.getMcal_date()){
+                       t.launchTimer();
+                   }
+                   else t.launchTimerwithDelay( del );
                    thr = new Thread() {
                        @Override
                        public void run() {
@@ -262,7 +292,10 @@ public class MainActivity extends Activity {
 
                else if(t.getCategory()==Task.Category.OTHER) {
                    adapter_other.add( t );
-                   t.launchTimer();
+                   if (timenow >= t.getMcal_date()){
+                       t.launchTimer();
+                   }
+                   else t.launchTimerwithDelay( del );
                    thr = new Thread() {
                        @Override
                        public void run() {
@@ -288,7 +321,10 @@ public class MainActivity extends Activity {
 
                else  {
                    adapter_other.add( t );
-                   t.launchTimer();
+                   if (timenow >= t.getMcal_date()){
+                       t.launchTimer();
+                   }
+                   else t.launchTimerwithDelay( del );
                    thr = new Thread() {
                        @Override
                        public void run() {
@@ -312,8 +348,6 @@ public class MainActivity extends Activity {
                    thr.start();
                }
 
-
-            //if else statement ends here
 
 
             } } }

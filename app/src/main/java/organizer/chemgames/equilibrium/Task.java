@@ -62,11 +62,26 @@ public class Task {
         final double prog = b / 1000;
         return prog;
     }
-    //progressBar.setProgress( (int) (100 / (prog) * holder.i) );
 
 
+    public Timer launchTimerwithDelay(long del){
+
+        timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                //maximum duration: 1 year
+                if (i<32000000){
+                    System.out.println("Time's up!"+i);
+                    setProgress( (int) (100 / (getProg()) * i) );
+                    i++; }
+            }
+        }; timer.schedule(timerTask, del, 1000);
+        return timer;
+    }
 
    public Timer launchTimer(){
+
         timer = new Timer();
         timerTask = new TimerTask() {
             @Override
@@ -106,7 +121,21 @@ public class Task {
     public void setDate(Date date) {
         mDate = date; }
 
+    public long getMset_date() {
+        return mset_date;
+    }
 
+    public void setMset_date(long mset_date) {
+        this.mset_date = mset_date;
+    }
+
+    public long getMcal_date() {
+        return mcal_date;
+    }
+
+    public void setMcal_date(long mcal_date) {
+        this.mcal_date = mcal_date;
+    }
 
     public static void packageIntent(Intent intent, Category category, String name, String date, long set_date, long cal_date) {
 
