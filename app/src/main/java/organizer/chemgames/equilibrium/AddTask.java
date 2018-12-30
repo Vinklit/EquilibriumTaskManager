@@ -32,6 +32,10 @@ public class AddTask extends Activity {
     private static final int DAYS_IN_YEAR = 365; //I know this value is more like 365.24...
     private static final long MILLISECONDS_IN_YEAR = MILLIS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY * DAYS_IN_YEAR;
     private static final long MILLISECONDS_IN_FIVE_MIN = MILLIS_IN_SECOND * SECONDS_IN_MINUTE * 5;
+    private static final long MILLISECONDS_IN_24H = MILLIS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR * HOURS_IN_DAY;
+    private static final long MILLISECONDS_IN_7D = MILLISECONDS_IN_24H *7;
+    private static final long MILLISECONDS_IN_14D = MILLISECONDS_IN_24H *14;
+    private static final long MILLISECONDS_IN_MONTH = MILLISECONDS_IN_YEAR/12;
     private static String s_time;
     private static String s_date;
     private static TextView t_date;
@@ -43,6 +47,9 @@ public class AddTask extends Activity {
     private Date date;
     private EditText title;
     private RadioGroup categoryGroup;
+    private RadioGroup scheduleGroup;
+    private long caldate ;
+    private long setdate ;
 
 
 
@@ -56,6 +63,7 @@ public class AddTask extends Activity {
         end_t_date = (TextView) findViewById(R.id.end_date);
         end_t_time = (TextView) findViewById(R.id.end_time);
         categoryGroup = (RadioGroup)findViewById( R.id.categoryGroup );
+        scheduleGroup = (RadioGroup)findViewById( R.id.scheduleGroup );
 
         // Default is current time
         date = new Date();
@@ -110,13 +118,38 @@ public class AddTask extends Activity {
 
         final CheckBox schedule = (CheckBox)findViewById( R.id.schedulenow );
 
+        final Button resetButton = (Button) findViewById(R.id.resetButton);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                title.setText("");
+                date = new Date();
+                date = new Date(date.getTime());
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                setDateString(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                t_date.setText(s_date);
+                setendDateString( c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH) );
+                end_t_date.setText(end_s_date);
+                setTimeString(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND));
+                t_time.setText(s_time);
+                setendTimeString(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND));
+                end_t_time.setText(end_s_time);
+                categoryGroup.clearCheck();
+                scheduleGroup.clearCheck();
+                schedule.setChecked( false );
+            }
+        });
 
         final Button submitButton = (Button) findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-              Task.Category category = null;
+             String titleString = title.getText().toString();
+
+
+                Task.Category category = null;
                 switch (categoryGroup.getCheckedRadioButtonId()){
                     case R.id.social:
                         category = Task.Category.FAM ;
@@ -138,42 +171,48 @@ public class AddTask extends Activity {
                         break; }
 
 
+                String wholeDate = end_s_date + " " + end_s_time;
+                SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.US);
+                Date d = null;
+                try { d = format.parse(wholeDate); } catch (ParseException e) { e.printStackTrace(); }
+                setdate = d.getTime();
+
+
                 if (schedule.isChecked()) {
-                    String titleString = title.getText().toString();
-                    String wholeDate = end_s_date + " " + end_s_time;
-                    SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.US);
-                    Date d = null;
-                    try { d = format.parse(wholeDate); } catch (ParseException e) { e.printStackTrace(); }
-                    long setdate = d.getTime();
                     Calendar cc = Calendar.getInstance();
-                    long caldate = cc.getTimeInMillis();
-                    // Package data to send to main
-                    Intent intent = new Intent();
-                    Task.packageIntent(intent, category,  titleString, wholeDate, setdate, caldate);
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    caldate = cc.getTimeInMillis();
                 }
 
                 else {
-
-                    String titleString = title.getText().toString();
-
-                    String wholeDate = end_s_date + " " + end_s_time;
-                    SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.US);
-                    Date d = null;
-                    try { d = format.parse(wholeDate); } catch (ParseException e) { e.printStackTrace(); }
-                    long setdate = d.getTime();
                     String startDate = s_date + " " + s_time;
                     SimpleDateFormat startformat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.US);
                     Date startd = null;
                     try { startd = startformat.parse(startDate); } catch (ParseException e) { e.printStackTrace(); }
-                    long caldate = startd.getTime();
-                    // Package data to send to main
-                    Intent intent = new Intent();
-                    Task.packageIntent(intent, category,  titleString, wholeDate, setdate, caldate);
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    caldate = startd.getTime();
                     }
+
+                switch (scheduleGroup.getCheckedRadioButtonId()){
+                    case R.id.daily:
+                       setdate = caldate + MILLISECONDS_IN_24H;
+                        //setdate = caldate + 60000;
+                        break;
+                    case  R.id.weekly:
+                        setdate = caldate + MILLISECONDS_IN_7D;
+                        //setdate = caldate + 120000;
+                        break;
+                    case  R.id.biweekly:
+                        setdate = caldate + MILLISECONDS_IN_14D;
+                        break;
+                    case R.id.monthly:
+                        setdate = caldate + MILLISECONDS_IN_MONTH;
+                        break;
+                }
+
+                // Package data to send to main
+                Intent intent = new Intent();
+                Task.packageIntent(intent, category,  titleString, wholeDate, setdate, caldate);
+                setResult(RESULT_OK, intent);
+                finish();
 
 
             }});

@@ -267,7 +267,6 @@
             android:id="@+id/daily"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
             android:text="Daily" />
 
         <RadioButton
@@ -298,6 +297,14 @@
         android:layout_alignParentLeft="true"
         android:layout_marginTop="1dp"
         android:text="@string/cancel_string" />
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Reset" />
 
     <Button
         android:id="@+id/submitButton"

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import java.util.Calendar;
@@ -14,15 +15,21 @@ import java.util.Calendar;
 
 public class MainActivity extends Activity {
 
-    //TODO: make fragments with daily, weekly, monthly, full overview of progress
+    //TODO: make a list of recyclerviews and give a possibility to edit/delete categories (future)
 
-    //TODO: swipe to delete (left) or reschedule (right) with dialog box
-
-    //TODO: Floating action button (coursera)
+    //TODO: swipe to delete (left) or reschedule (right)- dialog box. Reschedule: dialog box with time only: change category, start and end time.
+    //Example: if daily task: tomorrow or schedule, weekly: next week or schedule
 
     //TODO: sort by treemap
 
     //TODO: consommation de RAM en temps réel
+
+    //TODO: make fragments with daily, weekly, monthly, full overview of progress
+
+    //TODO DESIGN:
+    // TODO - Floating action button (coursera)
+    // TODO - Expandable areas
+
 
 
 
@@ -34,11 +41,8 @@ public class MainActivity extends Activity {
     TaskAdapter_sport adapter_sport;
     TaskAdapter_hobb adapter_hobb;
     TaskAdapter_other adapter_other;
-
     FloatingActionButton add;
-
     Thread  thr;
-
     RecyclerView recyclerView_fam;
     RecyclerView recyclerView_prof;
     RecyclerView recyclerView_educ;
@@ -69,49 +73,62 @@ public class MainActivity extends Activity {
 
             @Override
             public void onItemClick(View v, int position) {
-                adapter_fam.getItem( position ).cancelTimer();
-                adapter_fam.deleteItem (position); }}  ) ;
+                //edit task
+                v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) ); }}  ) ;
         recyclerView_fam.setAdapter(adapter_fam);
+        ItemTouchHelper itemTouchHelperFam = new ItemTouchHelper( new SwipeToDelete_fam( adapter_fam ) );
+        itemTouchHelperFam.attachToRecyclerView( recyclerView_fam );
 
         adapter_prof = new TaskAdapter_prof(this, new TaskAdapter_prof.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
-                adapter_prof.getItem( position ).cancelTimer();
-                adapter_prof.deleteItem (position); }}  ) ;
+                //edit task
+                v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) );
+                 }}  ) ;
         recyclerView_prof.setAdapter(adapter_prof);
+        ItemTouchHelper itemTouchHelperProf = new ItemTouchHelper( new SwipeToDelete_prof( adapter_prof ) );
+        itemTouchHelperProf.attachToRecyclerView( recyclerView_prof );
 
         adapter_educ = new TaskAdapter_educ(this, new TaskAdapter_educ.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
-                adapter_educ.getItem( position ).cancelTimer();
-                adapter_educ.deleteItem (position); }}  ) ;
+                //edit task
+                v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) ); }}  ) ;
         recyclerView_educ.setAdapter(adapter_educ);
+        ItemTouchHelper itemTouchHelperEduc = new ItemTouchHelper( new SwipeToDelete_educ( adapter_educ ) );
+        itemTouchHelperEduc.attachToRecyclerView( recyclerView_educ );
 
         adapter_sport = new TaskAdapter_sport(this, new TaskAdapter_sport.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
-                adapter_sport.getItem( position ).cancelTimer();
-                adapter_sport.deleteItem (position); }}  ) ;
+                //edit task
+                v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) ); }}  ) ;
         recyclerView_sport.setAdapter(adapter_sport);
+        ItemTouchHelper itemTouchHelperSport = new ItemTouchHelper( new SwipeToDelete_sport( adapter_sport ) );
+        itemTouchHelperSport.attachToRecyclerView( recyclerView_sport );
 
         adapter_hobb = new TaskAdapter_hobb(this, new TaskAdapter_hobb.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
-                adapter_hobb.getItem( position ).cancelTimer();
-                adapter_hobb.deleteItem (position); }}  ) ;
+                //edit task
+                v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) ); }}  ) ;
         recyclerView_hobb.setAdapter(adapter_hobb);
+        ItemTouchHelper itemTouchHelperHobb = new ItemTouchHelper( new SwipeToDelete_hobb( adapter_hobb ) );
+        itemTouchHelperHobb.attachToRecyclerView( recyclerView_hobb );
 
         adapter_other = new TaskAdapter_other(this, new TaskAdapter_other.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
-                adapter_other.getItem( position ).cancelTimer();
-                adapter_other.deleteItem (position); }}  ) ;
+                //edit task
+                v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) ); }}  ) ;
         recyclerView_other.setAdapter(adapter_other);
+        ItemTouchHelper itemTouchHelperOther = new ItemTouchHelper( new SwipeToDelete_other( adapter_other ) );
+        itemTouchHelperOther.attachToRecyclerView( recyclerView_other );
 
 
 
