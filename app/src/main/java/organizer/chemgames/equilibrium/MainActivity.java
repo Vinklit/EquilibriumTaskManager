@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.Calendar;
 
@@ -58,6 +61,10 @@ public class MainActivity extends Activity {
 
         recyclerView_fam = (RecyclerView) findViewById(R.id.recyclerView_fam);
         recyclerView_fam.setLayoutManager(new LinearLayoutManager(this));
+
+       /* DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);*/
+
         recyclerView_prof = (RecyclerView) findViewById(R.id.recyclerView_prof);
         recyclerView_prof.setLayoutManager(new LinearLayoutManager(this));
         recyclerView_educ = (RecyclerView) findViewById(R.id.recyclerView_educ);
@@ -75,9 +82,18 @@ public class MainActivity extends Activity {
             public void onItemClick(View v, int position) {
                 //edit task
                 v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) ); }}  ) ;
+
         recyclerView_fam.setAdapter(adapter_fam);
         ItemTouchHelper itemTouchHelperFam = new ItemTouchHelper( new SwipeToDelete_fam( adapter_fam ) );
         itemTouchHelperFam.attachToRecyclerView( recyclerView_fam );
+
+     if ( adapter_fam.getItemCount()>2){
+        ViewGroup.LayoutParams params=recyclerView_fam.getLayoutParams();
+        params.height=adapter_fam.setAdapterHeight();
+        recyclerView_fam.setLayoutParams(params);
+       }
+
+
 
         adapter_prof = new TaskAdapter_prof(this, new TaskAdapter_prof.ItemClickListener(){
 
@@ -155,9 +171,8 @@ public class MainActivity extends Activity {
 
                //if else statement goes here
                if(t.getCategory()==Task.Category.FAM) {
+
                    adapter_fam.add( t );
-
-
 
             if (timenow >= t.getMcal_date()){
                 t.launchTimer();

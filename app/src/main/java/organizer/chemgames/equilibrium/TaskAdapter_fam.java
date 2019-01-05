@@ -1,13 +1,19 @@
 package organizer.chemgames.equilibrium;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -15,17 +21,23 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 
 public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHolder> {
     private List<Task> data= new ArrayList<Task>();
     private LayoutInflater mInflater;
     private ItemClickListener listener;
+    int parent_height;
+    int originalItemSize;
 
 
 
     TaskAdapter_fam(Context context, ItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
-        this.listener = listener; }
+        this.listener = listener;
+    }
 
 
 
@@ -34,16 +46,27 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.taskitem, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
+
+        if (data.size() > 2) {
+         /*   ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT );
+            parent_height = parent.getHeight();
+            params.height = parent_height; //height recycleviewer
+            parent.setLayoutParams( params );*/
+        }
+
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(v, viewHolder.getAdapterPosition());
             }
-        });return viewHolder;
+        });
+
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
+
         Task currentItem = data.get(position);
         viewHolder.itemName.setText(currentItem.getTaskname());
         if (currentItem.getProgress()<99 && currentItem.getProg()>0) {
@@ -53,6 +76,22 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
             viewHolder.progressBar.setProgress(100);
         }
         viewHolder.date.setText(Task.FORMAT.format(currentItem.getDate()));
+
+
+
+        if (data.size() > 2) {
+            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT );
+            parent_height =  viewHolder.itemView.getHeight();
+            params.height = parent_height; //height recycleviewer
+            viewHolder.itemView.setLayoutParams( params );
+        }
+
+
+
+
+
+
+
     }
 
 
@@ -81,9 +120,15 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
     }
 
 
+    public int setAdapterHeight(){
+        return parent_height;
+    }
+
+
     public void deleteItem(int position) {
         data.remove( position );
-        notifyItemRemoved(position); }
+        notifyItemRemoved(position);
+    }
 
 
     public int index (Task item) {
@@ -99,20 +144,21 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
     // inner class to hold a reference to each item of RecyclerView
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-       TextView itemName;
-       TextView progress;
-       TextView date;
-       ProgressBar progressBar;
+        TextView itemName;
+        TextView progress;
+        TextView date;
+        ProgressBar progressBar;
 
 
         public ViewHolder(View itemLayoutView) {
-            super(itemLayoutView);
-            itemName = (TextView)itemLayoutView.findViewById( R.id.title );
-            progress = (TextView)itemLayoutView.findViewById( R.id.progress );
-            date = (TextView)itemLayoutView.findViewById( R.id.runstatus );
-            progressBar = (ProgressBar)itemLayoutView.findViewById( R.id.progressbar );
+            super( itemLayoutView );
+            itemName = (TextView) itemLayoutView.findViewById( R.id.title );
+            progress = (TextView) itemLayoutView.findViewById( R.id.progress );
+            date = (TextView) itemLayoutView.findViewById( R.id.runstatus );
+            progressBar = (ProgressBar) itemLayoutView.findViewById( R.id.progressbar );
 
         }
+
     }
     // Return the size of your itemsData (invoked by the layout manager)
     @Override
@@ -123,6 +169,9 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
     public interface ItemClickListener {
         public void onItemClick(View v, int position);
     }
+
+
+
 
 
 }

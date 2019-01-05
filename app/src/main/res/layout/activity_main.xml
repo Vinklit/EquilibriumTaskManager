@@ -2,19 +2,11 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
     <!-- Task Categories -->
 
@@ -32,10 +24,11 @@
         app:layout_constraintHeight_default="percent"
         app:layout_constraintHeight_percent="0.15"
         app:layout_constraintVertical_bias="0.01"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"
         app:layout_constraintTop_toBottomOf="@id/TitleLabel_fam"
+        tools:itemCount="3"
         />
 
 
@@ -54,7 +47,7 @@
         app:layout_constraintHeight_default="percent"
         app:layout_constraintHeight_percent="0.15"
         app:layout_constraintVertical_bias="0.01"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"
         app:layout_constraintTop_toBottomOf="@id/TitleLabel_prof"
@@ -75,7 +68,7 @@
         app:layout_constraintHeight_default="percent"
         app:layout_constraintHeight_percent="0.15"
         app:layout_constraintVertical_bias="0.01"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"
         app:layout_constraintTop_toBottomOf="@id/TitleLabel_educ"
@@ -97,7 +90,7 @@
         app:layout_constraintHeight_default="percent"
         app:layout_constraintHeight_percent="0.15"
         app:layout_constraintVertical_bias="0.01"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"
         app:layout_constraintTop_toBottomOf="@id/TitleLabel_sport"
@@ -118,7 +111,7 @@
             app:layout_constraintHeight_default="percent"
             app:layout_constraintHeight_percent="0.15"
             app:layout_constraintVertical_bias="0.01"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
             app:layout_constraintTop_toBottomOf="@id/TitleLabel_hobb"
@@ -140,22 +133,11 @@
             app:layout_constraintHeight_default="percent"
             app:layout_constraintHeight_percent="0.15"
             app:layout_constraintVertical_bias="0.01"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
             app:layout_constraintTop_toBottomOf="@id/TitleLabel_other"
             />
-
-
-
-
-
-
-</android.support.constraint.ConstraintLayout>
-
-
-
-</ScrollView>
 
 
     <android.support.design.widget.FloatingActionButton
