@@ -30,7 +30,7 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
     private LayoutInflater mInflater;
     private ItemClickListener listener;
     int parent_height;
-    int originalItemSize;
+    ViewHolder viewHolder;
 
 
 
@@ -45,14 +45,25 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.taskitem, parent, false);
-        final ViewHolder viewHolder = new ViewHolder(view);
+       viewHolder = new ViewHolder(view);
 
-        if (data.size() > 2) {
-         /*   ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT );
-            parent_height = parent.getHeight();
-            params.height = parent_height; //height recycleviewer
-            parent.setLayoutParams( params );*/
-        }
+
+       // if(some condition){
+//inflate layout 1
+       // }else{
+//inflate layout 2
+       // }
+
+
+/* if (data.size() > 2) {
+          ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT );
+          parent_height = parent.getHeight();
+          params.height = parent_height; //height recycleviewer
+          parent.setLayoutParams( params );
+       }*/
+
+
+
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,18 +90,12 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
 
 
 
-        if (data.size() > 2) {
+   /* if (data.size() > 2) {
             ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT );
-            parent_height =  viewHolder.itemView.getHeight();
+            parent_height =  viewHolder.itemView.getHeight() ;
             params.height = parent_height; //height recycleviewer
             viewHolder.itemView.setLayoutParams( params );
-        }
-
-
-
-
-
-
+     }*/
 
     }
 
@@ -101,6 +106,7 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
 
     public void add(Task item) {
         data.add(item);
+
         int pos = index( item );
         notifyDataSetChanged();
         notifyItemChanged( pos );

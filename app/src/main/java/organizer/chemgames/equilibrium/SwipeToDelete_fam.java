@@ -5,8 +5,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 public class SwipeToDelete_fam extends ItemTouchHelper.SimpleCallback {
     private TaskAdapter_fam famadapter;
@@ -36,8 +39,9 @@ public class SwipeToDelete_fam extends ItemTouchHelper.SimpleCallback {
                             int position = viewHolder.getAdapterPosition();
                             famadapter.getItem( position ).cancelTimer();
                             famadapter.deleteItem(position);
+                            famadapter.notifyItemRemoved( position );
+
                             dialog.cancel();
-                            // Then you can remove this item from the adapter
                         }})
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {

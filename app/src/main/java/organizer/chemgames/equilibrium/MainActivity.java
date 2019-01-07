@@ -12,6 +12,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.Calendar;
 
@@ -52,6 +53,12 @@ public class MainActivity extends Activity {
     RecyclerView recyclerView_sport;
     RecyclerView recyclerView_hobb;
     RecyclerView recyclerView_other;
+    TextView test;
+    TextView test2;
+
+    int a;
+    int b;
+    int i;
 
 
     @Override
@@ -59,11 +66,16 @@ public class MainActivity extends Activity {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
+        test = (TextView)findViewById( R.id.TitleLabel_prof );
+        test2 = (TextView)findViewById( R.id.TitleLabel_educ );
+
         recyclerView_fam = (RecyclerView) findViewById(R.id.recyclerView_fam);
         recyclerView_fam.setLayoutManager(new LinearLayoutManager(this));
 
-       /* DisplayMetrics displaymetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);*/
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        a = (displaymetrics.heightPixels * 80) / 100;
+        b= (displaymetrics.heightPixels * 15) / 100;
 
         recyclerView_prof = (RecyclerView) findViewById(R.id.recyclerView_prof);
         recyclerView_prof.setLayoutManager(new LinearLayoutManager(this));
@@ -81,19 +93,13 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(View v, int position) {
                 //edit task
-                v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) ); }}  ) ;
+                v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) );
+                }}  ) ;
+
 
         recyclerView_fam.setAdapter(adapter_fam);
         ItemTouchHelper itemTouchHelperFam = new ItemTouchHelper( new SwipeToDelete_fam( adapter_fam ) );
         itemTouchHelperFam.attachToRecyclerView( recyclerView_fam );
-
-     if ( adapter_fam.getItemCount()>2){
-        ViewGroup.LayoutParams params=recyclerView_fam.getLayoutParams();
-        params.height=adapter_fam.setAdapterHeight();
-        recyclerView_fam.setLayoutParams(params);
-       }
-
-
 
         adapter_prof = new TaskAdapter_prof(this, new TaskAdapter_prof.ItemClickListener(){
 
@@ -101,6 +107,10 @@ public class MainActivity extends Activity {
             public void onItemClick(View v, int position) {
                 //edit task
                 v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) );
+
+
+
+
                  }}  ) ;
         recyclerView_prof.setAdapter(adapter_prof);
         ItemTouchHelper itemTouchHelperProf = new ItemTouchHelper( new SwipeToDelete_prof( adapter_prof ) );
@@ -171,8 +181,36 @@ public class MainActivity extends Activity {
 
                //if else statement goes here
                if(t.getCategory()==Task.Category.FAM) {
-
                    adapter_fam.add( t );
+
+              if (adapter_fam.getItemCount()>2){
+                        i = recyclerView_fam.getHeight();
+                       recyclerView_fam.getLayoutParams().height = i;
+                       adapter_fam.notifyDataSetChanged();
+
+
+                       test.setOnClickListener( new View.OnClickListener() {
+                           @Override
+                           public void onClick(View view) {
+                               recyclerView_fam.getLayoutParams().height = a;
+                               adapter_fam.notifyDataSetChanged();
+
+                           }
+                       } );
+
+                       test2.setOnClickListener( new View.OnClickListener() {
+                           @Override
+                           public void onClick(View view) {
+
+                                   recyclerView_fam.getLayoutParams().height = i;
+                                   adapter_fam.notifyDataSetChanged();
+                           }
+
+                       } );
+
+                       }
+
+
 
             if (timenow >= t.getMcal_date()){
                 t.launchTimer();
