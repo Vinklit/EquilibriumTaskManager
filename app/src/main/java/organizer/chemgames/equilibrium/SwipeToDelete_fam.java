@@ -39,7 +39,6 @@ public class SwipeToDelete_fam extends ItemTouchHelper.SimpleCallback {
                             int position = viewHolder.getAdapterPosition();
                             famadapter.getItem( position ).cancelTimer();
                             famadapter.deleteItem(position);
-                            famadapter.notifyItemRemoved( position );
 
                             dialog.cancel();
                         }})

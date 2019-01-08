@@ -12,7 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name"
-        android:textAppearance="?android:attr/textAppearanceLarge" >
+        android:textStyle="bold"
+        android:textSize="10sp"
+        >
     </TextView>
     
 
@@ -24,9 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/title"
-        android:layout_marginTop="2dp"
         android:text="progress"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textSize="10sp" />
 
 
     <TextView
@@ -35,9 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/title"
-        android:layout_marginTop="2dp"
         android:text="Is running???"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textSize="10sp" />
 
     <ProgressBar
         android:id="@+id/progressbar"

@@ -10,145 +10,424 @@
 
     <!-- Task Categories -->
 
-    <TextView
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/TitleLabel_fam"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/colorAccent">
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:text="Family and Social Activities"
-        android:textAppearance="?android:attr/textAppearanceLarge" >
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:background="@color/colorAccent">
     </TextView>
+
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_fam"
         android:layout_width="match_parent"
         app:layout_constraintHeight_default="percent"
-        app:layout_constraintHeight_percent="0.15"
+        app:layout_constraintHeight_percent="0.13"
         app:layout_constraintVertical_bias="0.01"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"
         app:layout_constraintTop_toBottomOf="@id/TitleLabel_fam"
         tools:itemCount="3"
         />
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/expendfam"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.025"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_fam"
+        android:background="@color/colorAccent">
+
+        <ImageView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.13"
+            android:layout_height="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/collapsefam"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_fam"
+        android:background="@color/colorAccent"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.13"
+            android:layout_height="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            android:src="@drawable/ic_keyboard_arrow_up_black_24dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/TitleLabel_prof"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/expendfam"
+        android:background="@color/colorPrimary">
 
     <TextView
-        android:id="@+id/TitleLabel_prof"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:text="Professionnal Tasks"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView_fam"
-        android:textAppearance="?android:attr/textAppearanceLarge" >
+        android:textAppearance="?android:attr/textAppearanceSmall" >
     </TextView>
+
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_prof"
         android:layout_width="match_parent"
         app:layout_constraintHeight_default="percent"
-        app:layout_constraintHeight_percent="0.15"
+        app:layout_constraintHeight_percent="0.13"
         app:layout_constraintVertical_bias="0.01"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"
         app:layout_constraintTop_toBottomOf="@id/TitleLabel_prof"
         />
 
-    <TextView
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/expendprof"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_prof"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.13"
+            android:layout_height="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/collapseprof"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_prof"
+        android:background="@color/colorPrimary"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.13"
+            android:layout_height="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            android:src="@drawable/ic_keyboard_arrow_up_black_24dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/TitleLabel_educ"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/expendprof"
+        android:background="@color/colorAccent">
+
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:text="Education and Personal Development"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView_prof"
-        android:textAppearance="?android:attr/textAppearanceLarge" >
+        android:textAppearance="?android:attr/textAppearanceSmall" >
     </TextView>
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_educ"
         android:layout_width="match_parent"
         app:layout_constraintHeight_default="percent"
-        app:layout_constraintHeight_percent="0.15"
+        app:layout_constraintHeight_percent="0.13"
         app:layout_constraintVertical_bias="0.01"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"
         app:layout_constraintTop_toBottomOf="@id/TitleLabel_educ"
         />
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/expendeduc"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_educ"
+        android:background="@color/colorAccent">
+
+        <ImageView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.13"
+            android:layout_height="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/collapseeduc"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_educ"
+        android:background="@color/colorAccent"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.13"
+            android:layout_height="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            android:src="@drawable/ic_keyboard_arrow_up_black_24dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/TitleLabel_sport"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/expendeduc"
+        android:background="@color/colorPrimary">
 
     <TextView
-        android:id="@+id/TitleLabel_sport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:text="Sport and Wellbeing"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView_educ"
-        android:textAppearance="?android:attr/textAppearanceLarge" >
+        android:textAppearance="?android:attr/textAppearanceSmall" >
     </TextView>
+
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_sport"
         android:layout_width="match_parent"
         app:layout_constraintHeight_default="percent"
-        app:layout_constraintHeight_percent="0.15"
+        app:layout_constraintHeight_percent="0.13"
         app:layout_constraintVertical_bias="0.01"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scrollbars="vertical"
         android:fadeScrollbars="false"
         app:layout_constraintTop_toBottomOf="@id/TitleLabel_sport"
         />
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/expendsport"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_sport"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.13"
+            android:layout_height="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/collapsesport"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_sport"
+        android:background="@color/colorPrimary"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.13"
+            android:layout_height="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            android:src="@drawable/ic_keyboard_arrow_up_black_24dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/TitleLabel_hobb"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/expendsport"
+        android:background="@color/colorAccent">
+
         <TextView
-            android:id="@+id/TitleLabel_hobb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:text="Hobbies and Personal Projects"
-            app:layout_constraintTop_toBottomOf="@id/recyclerView_sport"
-            android:textAppearance="?android:attr/textAppearanceLarge" >
+            android:textAppearance="?android:attr/textAppearanceSmall" >
         </TextView>
+
+    </android.support.constraint.ConstraintLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView_hobb"
             android:layout_width="match_parent"
             app:layout_constraintHeight_default="percent"
-            app:layout_constraintHeight_percent="0.15"
+            app:layout_constraintHeight_percent="0.13"
             app:layout_constraintVertical_bias="0.01"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:scrollbars="vertical"
             android:fadeScrollbars="false"
             app:layout_constraintTop_toBottomOf="@id/TitleLabel_hobb"
             />
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/expendhobb"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_hobb"
+        android:background="@color/colorAccent">
 
-        <TextView
-            android:id="@+id/TitleLabel_other"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Other Tasks"
-            app:layout_constraintTop_toBottomOf="@id/recyclerView_hobb"
-            android:textAppearance="?android:attr/textAppearanceLarge" >
-        </TextView>
+        <ImageView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.13"
+            android:layout_height="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            android:src="@drawable/ic_keyboard_arrow_down_black_24dp"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_other"
-            android:layout_width="match_parent"
-            app:layout_constraintHeight_default="percent"
-            app:layout_constraintHeight_percent="0.15"
-            app:layout_constraintVertical_bias="0.01"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:fadeScrollbars="false"
-            app:layout_constraintTop_toBottomOf="@id/TitleLabel_other"
-            />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/collapsehobb"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.035"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_hobb"
+        android:background="@color/colorAccent"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="0dp"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.13"
+            android:layout_height="match_parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.85"
+            android:src="@drawable/ic_keyboard_arrow_up_black_24dp"/>
+
+    </android.support.constraint.ConstraintLayout>
 
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addtask"
-        android:layout_width="89dp"
-        android:layout_height="104dp"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="32dp"
+        android:layout_width="80dp"
+        android:layout_height="74dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintHorizontal_bias="0.887"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.933"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.08" />
 
 </android.support.constraint.ConstraintLayout>
 

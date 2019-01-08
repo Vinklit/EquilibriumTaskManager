@@ -165,9 +165,6 @@ public class AddTask extends Activity {
                         break;
                     case  R.id.hobbies:
                         category = Task.Category.HOBB;
-                        break;
-                    case  R.id.other:
-                        category = Task.Category.OTHER;
                         break; }
 
 
