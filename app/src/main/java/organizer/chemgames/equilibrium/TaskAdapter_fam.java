@@ -99,6 +99,13 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
 
     }
 
+    public void clear() {
+
+        data.clear();
+        notifyDataSetChanged();
+
+    }
+
 
     public Task getItem(int position) {
         return data.get(position);

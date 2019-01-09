@@ -12,19 +12,24 @@ import java.util.TimerTask;
 
 
 public class Task {
-    public enum Category {FAM, PROF, EDUC, SPORT, HOBB, OTHER};
+
+    public static final String ITEM_SEP = System.getProperty("line.separator");
+    int i;
+    int progress;
+    Timer timer;
+    TimerTask timerTask;
+
+    public enum Category {FAM, PROF, EDUC, SPORT, HOBB};
     public final static String NAME = "name";
     public final static String CATEGORY = "category";
     public final static String DATE = "date";
     public final static String SETDATE = "set_date";
     public final static String CALDATE = "cal_date";
-        int i;
-        int progress;
-        Timer timer;
-        TimerTask timerTask;
-        String taskname = new String();
-    private Category mycategory = Category.OTHER;
-    public final static SimpleDateFormat FORMAT = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.US);
+
+    String taskname = new String();
+    private Category mycategory = Category.FAM;
+    public final static SimpleDateFormat FORMAT = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss", Locale.US);
     private Date mDate = new Date();
     private long mset_date = 0;
     private long mcal_date = 0;
@@ -146,6 +151,16 @@ public class Task {
         intent.putExtra(Task.CALDATE, cal_date);
 
     }
+
+    public String toString() {
+        return taskname + ITEM_SEP + mycategory + ITEM_SEP + FORMAT.format(mDate) + ITEM_SEP + mset_date + ITEM_SEP + mcal_date;
+    }
+
+    public String toLog() {
+        return "Title:" + taskname + ITEM_SEP + "Category:" + mycategory + ITEM_SEP + "Date:" + FORMAT.format(mDate)
+                + ITEM_SEP + "Set_date:" + mset_date  + ITEM_SEP + "Cal_date:" + mcal_date ;
+    }
+
 
 }
 

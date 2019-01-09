@@ -3,6 +3,7 @@ package organizer.chemgames.equilibrium;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.RenderScript;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -10,20 +11,41 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
+
+import static android.content.ContentValues.TAG;
 
 
 public class MainActivity extends Activity {
 
-    //TODO: make a list of recyclerviews and give a possibility to edit/delete categories (future)
+    //TODO: make a list of recyclerviews and give a possibility to edit/delete categories (future), or set a list of cat. at the beginning
+
+    //TODO: resolve the change size on delete issue
 
     //TODO: swipe to delete (left) or reschedule (right)- dialog box. Reschedule: dialog box with time only: change category, start and end time.
     //Example: if daily task: tomorrow or schedule, weekly: next week or schedule
+
+    //TODO: save data of taska in a database (Firebase)
 
     //TODO: sort by treemap
 
@@ -42,6 +64,12 @@ public class MainActivity extends Activity {
 
     private static final int REQUEST = 0;
 
+    private static final String FILE_NAME = "TodoManagerActivityData.txt";
+
+    // IDs for menu items
+    private static final int MENU_DELETE = Menu.FIRST;
+    private static final int MENU_DUMP = Menu.FIRST + 1;
+
     TaskAdapter_fam adapter_fam;
     TaskAdapter_prof adapter_prof;
     TaskAdapter_educ adapter_educ;
@@ -50,6 +78,7 @@ public class MainActivity extends Activity {
     TaskAdapter_other adapter_other;
     FloatingActionButton add;
     Thread  thr;
+    Thread  thr2;
     RecyclerView recyclerView_fam;
     RecyclerView recyclerView_prof;
     RecyclerView recyclerView_educ;
@@ -57,6 +86,7 @@ public class MainActivity extends Activity {
     RecyclerView recyclerView_hobb;
     ConstraintLayout test;
     ConstraintLayout test2;
+    Task t;
 
     int a;
     int b;
@@ -72,6 +102,15 @@ public class MainActivity extends Activity {
 
         test = (ConstraintLayout)findViewById( R.id.expendfam );
         test2 = (ConstraintLayout) findViewById( R.id.collapsefam );
+
+
+        add = (FloatingActionButton)findViewById( R.id.addtask );
+        add.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent( MainActivity.this, AddTask.class );
+                startActivityForResult( intent, REQUEST );
+            }} );
 
         recyclerView_fam = (RecyclerView) findViewById(R.id.recyclerView_fam);
         recyclerView_fam.setLayoutManager(new LinearLayoutManager(this));
@@ -176,22 +215,14 @@ public class MainActivity extends Activity {
 
 
 
-        add = (FloatingActionButton)findViewById( R.id.addtask );
-        add.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent mAddNewToDoIntent = new Intent( MainActivity.this, AddTask.class );
-                startActivityForResult( mAddNewToDoIntent, REQUEST );
-            }} );
     }
 
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == REQUEST){
-            if (resultCode == RESULT_OK){
-               final Task t = new Task(intent);
+        if (requestCode == REQUEST && resultCode == RESULT_OK){
+              t = new Task(intent);
                 Calendar cc = Calendar.getInstance();
                 long timenow = cc.getTimeInMillis();
                 long del = t.getMcal_date()-timenow;
@@ -218,6 +249,7 @@ public class MainActivity extends Activity {
                                runOnUiThread( new Runnable() {
                                    @Override
                                    public void run() {
+                                       Toast.makeText( MainActivity.this, "Thread1", Toast.LENGTH_LONG ).show();
                                        adapter_fam.notifyItemChanged( adapter_fam.index( t ) );
                                        recyclerView_fam.setItemAnimator( null );
                                    }
@@ -467,11 +499,182 @@ public class MainActivity extends Activity {
 
 
 
-            } } }
+            } }
+
+   /* @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+
+    }*/
+
+
+  @Override
+    public void onResume() {
+        super.onResume();
+        // Load saved ToDoItems, if necessary
+      if (adapter_fam.getItemCount() == 0)
+         loadItems();
+    }
+
+  @Override
+    protected void onPause() {
+        super.onPause();
+        // Save ToDoItems
+        saveItems();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (adapter_fam.getItemCount() != 0){
+            //save progress for task
+        t.cancelTimer();
+       // thr.interrupt();
+
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        menu.add(Menu.NONE, MENU_DELETE, Menu.NONE, "Delete all");
+        menu.add(Menu.NONE, MENU_DUMP, Menu.NONE, "Dump to log");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_DELETE:
+                adapter_fam.clear();
+                return true;
+            case MENU_DUMP:
+                dump();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void dump() {
+
+        for (int i = 0; i < adapter_fam.getItemCount(); i++) {
+            String data = ((Task)adapter_fam.getItem(i)).toLog();
+            Log.i(TAG,	"Item " + i + ": " + data.replace(Task.ITEM_SEP, ","));
+        }
+
+    }
+
+    // Load stored ToDoItems
+    private void loadItems() {
+        BufferedReader reader = null;
+        try {
+            FileInputStream fis = openFileInput(FILE_NAME);
+            reader = new BufferedReader(new InputStreamReader(fis));
+            //String name, Category category, Date date, long set_date, long cal_date
+            String name = null;
+            String category = null;
+            Date date = null;
+            String set_date = null;
+            String cal_date = null;
+            while (null != (name = reader.readLine())) {
+              category = reader.readLine();
+              date = Task.FORMAT.parse(reader.readLine());
+                set_date = reader.readLine();
+                cal_date = reader.readLine();
+                final Task m = new Task(name, Task.Category.valueOf(category), date, Long.valueOf(set_date), Long.valueOf(cal_date) );
+
+                //replace t with m while preserving progress
+
+                adapter_fam.add(m);
+
+
+                Calendar cc = Calendar.getInstance();
+                long timenow = cc.getTimeInMillis();
+                long del = m.getMcal_date()-timenow;
+
+                if (timenow >= m.getMcal_date()){
+                    m.launchTimer();
+                }
+                else m.launchTimerwithDelay( del );;
+                //calculate the current progress
+                    thr2 = new Thread() {
+                    @Override
+                    public void run() {
+
+                        while (m.getProgress() < 100 && m.getProgress() >= 0) {
+
+                            m.setProgress( 5 );
+                            runOnUiThread( new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    adapter_fam.notifyItemChanged( adapter_fam.index( m ) );
+                                    recyclerView_fam.setItemAnimator( null );
+                                    Toast.makeText( MainActivity.this, "Thread2", Toast.LENGTH_LONG ).show();
+                                }
+                            } );
+                            try {
+                                Thread.sleep( 100 );
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        m.cancelTimer();
+                    }
+                };
+                thr2.start();
 
 
 
 
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+  catch (ParseException e) {
+  e.printStackTrace(); }
+        finally {
+            if (null != reader) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    // Save ToDoItems to file
+    private void saveItems() {
+        PrintWriter writer = null;
+        try {
+            FileOutputStream fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+                    fos)));
+            for (int idx = 0; idx < adapter_fam.getItemCount(); idx++) {
+                writer.println(adapter_fam.getItem(idx));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != writer) {
+                writer.close();
+            }
+        }
+    }
+
+    private void log(String msg) {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
