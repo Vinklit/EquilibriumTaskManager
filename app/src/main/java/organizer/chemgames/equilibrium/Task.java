@@ -14,6 +14,7 @@ import java.util.TimerTask;
 public class Task {
 
     public static final String ITEM_SEP = System.getProperty("line.separator");
+
     int i;
     int progress;
     Timer timer;
@@ -69,7 +70,9 @@ public class Task {
     }
 
 
-    public Timer launchTimerwithDelay(long del){
+    //j defines the delay if the application was closed for some time, is calculated in MainActivity
+
+    public Timer launchTimerwithDelay(long del, final int j){
 
         timer = new Timer();
         timerTask = new TimerTask() {
@@ -78,15 +81,14 @@ public class Task {
                 //maximum duration: 1 year
                 if (i<32000000){
                     System.out.println("Time's up!"+i);
-                    setProgress( (int) (100 / (getProg()) * i) );
+                    setProgress( (int) (100 / (getProg()) * i) + j );
                     i++; }
             }
         }; timer.schedule(timerTask, del, 1000);
         return timer;
     }
 
-   public Timer launchTimer(){
-
+   public Timer launchTimer(final int j){
         timer = new Timer();
         timerTask = new TimerTask() {
             @Override
@@ -94,7 +96,7 @@ public class Task {
                 //maximum duration: 1 year
                 if (i<32000000){
                     System.out.println("Time's up!"+i);
-                        setProgress( (int) (100 / (getProg()) * i) );
+                        setProgress( (int) (100 / (getProg()) * i) + j );
                     i++; }
             }
         }; timer.schedule(timerTask, 0, 1000);
@@ -104,6 +106,13 @@ public class Task {
     public void cancelTimer (){
            timer.cancel();
            timer.purge();
+    }
+
+    public String getName() {
+        return taskname;
+    }
+    public void setName(String name) {
+        this.taskname = name;
     }
 
     public int getProgress() {

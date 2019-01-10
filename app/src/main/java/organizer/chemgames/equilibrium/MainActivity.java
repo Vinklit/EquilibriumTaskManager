@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
     //TODO: swipe to delete (left) or reschedule (right)- dialog box. Reschedule: dialog box with time only: change category, start and end time.
     //Example: if daily task: tomorrow or schedule, weekly: next week or schedule
 
-    //TODO: save data of taska in a database (Firebase)
+    //TODO: save data of taska in a database (SQL)
 
     //TODO: sort by treemap
 
@@ -64,11 +64,8 @@ public class MainActivity extends Activity {
 
     private static final int REQUEST = 0;
 
-    private static final String FILE_NAME = "TodoManagerActivityData.txt";
+    private static final String FILE_NAME = "Equilibrium.txt";
 
-    // IDs for menu items
-    private static final int MENU_DELETE = Menu.FIRST;
-    private static final int MENU_DUMP = Menu.FIRST + 1;
 
     TaskAdapter_fam adapter_fam;
     TaskAdapter_prof adapter_prof;
@@ -238,9 +235,9 @@ public class MainActivity extends Activity {
                        }*/
 
             if (timenow >= t.getMcal_date()){
-                t.launchTimer();
+                t.launchTimer(0);
             }
-            else t.launchTimerwithDelay( del );
+            else t.launchTimerwithDelay( del, 0 );
 
                    thr = new Thread() {
                        @Override
@@ -270,7 +267,7 @@ public class MainActivity extends Activity {
 
                }
 
-                else if(t.getCategory()==Task.Category.PROF) {
+            /*    else if(t.getCategory()==Task.Category.PROF) {
                     adapter_prof.add( t );
 
                    if (adapter_prof.getItemCount()>2){
@@ -494,7 +491,8 @@ public class MainActivity extends Activity {
                        }
                    };
                    thr.start();
-               }
+
+               } */
 
 
 
@@ -527,68 +525,43 @@ public class MainActivity extends Activity {
     public void onBackPressed() {
         super.onBackPressed();
         if (adapter_fam.getItemCount() != 0){
-            //save progress for task
+            //save progress for task and time when the applicaton left to recalculate progress
         t.cancelTimer();
-       // thr.interrupt();
+
 
         }
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
 
-        menu.add(Menu.NONE, MENU_DELETE, Menu.NONE, "Delete all");
-        menu.add(Menu.NONE, MENU_DUMP, Menu.NONE, "Dump to log");
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_DELETE:
-                adapter_fam.clear();
-                return true;
-            case MENU_DUMP:
-                dump();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void dump() {
-
-        for (int i = 0; i < adapter_fam.getItemCount(); i++) {
-            String data = ((Task)adapter_fam.getItem(i)).toLog();
-            Log.i(TAG,	"Item " + i + ": " + data.replace(Task.ITEM_SEP, ","));
-        }
-
-    }
-
-    // Load stored ToDoItems
+    // Load stored Tasks
     private void loadItems() {
+        //Reads text from a character-input stream, buffering characters so as to provide for the efficient reading of characters, arrays, and lines.
+        //Without buffering, each invocation of read() or readLine() could cause bytes to be read from the file,
+        // converted into characters, and then returned, which can be very inefficient.
         BufferedReader reader = null;
         try {
             FileInputStream fis = openFileInput(FILE_NAME);
             reader = new BufferedReader(new InputStreamReader(fis));
-            //String name, Category category, Date date, long set_date, long cal_date
+            //On crée des varyables pour y affecter es résultats de la lécture
             String name = null;
             String category = null;
             Date date = null;
             String set_date = null;
             String cal_date = null;
+            //Tand que l'affectation de la variable est possible, on boucle; on sort de la boucle lorsque le fichier est terminé
             while (null != (name = reader.readLine())) {
               category = reader.readLine();
               date = Task.FORMAT.parse(reader.readLine());
                 set_date = reader.readLine();
                 cal_date = reader.readLine();
-                final Task m = new Task(name, Task.Category.valueOf(category), date, Long.valueOf(set_date), Long.valueOf(cal_date) );
+
+              final Task  m = new Task(name, Task.Category.valueOf(category), date, Long.valueOf(set_date), Long.valueOf(cal_date) );
 
                 //replace t with m while preserving progress
 
-                adapter_fam.add(m);
+               adapter_fam.add(m);
 
 
                 Calendar cc = Calendar.getInstance();
@@ -596,24 +569,21 @@ public class MainActivity extends Activity {
                 long del = m.getMcal_date()-timenow;
 
                 if (timenow >= m.getMcal_date()){
-                    m.launchTimer();
+                    m.launchTimer(20);
                 }
-                else m.launchTimerwithDelay( del );;
-                //calculate the current progress
-                    thr2 = new Thread() {
+                else m.launchTimerwithDelay( del, 20 );
+
+
+                thr2 = new Thread() {
                     @Override
                     public void run() {
-
                         while (m.getProgress() < 100 && m.getProgress() >= 0) {
-
-                            m.setProgress( 5 );
                             runOnUiThread( new Runnable() {
-
                                 @Override
                                 public void run() {
+                                    Toast.makeText( MainActivity.this, "Thread2", Toast.LENGTH_LONG ).show();
                                     adapter_fam.notifyItemChanged( adapter_fam.index( m ) );
                                     recyclerView_fam.setItemAnimator( null );
-                                    Toast.makeText( MainActivity.this, "Thread2", Toast.LENGTH_LONG ).show();
                                 }
                             } );
                             try {
@@ -628,16 +598,18 @@ public class MainActivity extends Activity {
                 thr2.start();
 
 
-
-
             }
+
+            //Si le fichier n'est pas trouvé
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            e.printStackTrace(); }
+            //Si erreur de lécture/écriture
+        catch (IOException e) {
             e.printStackTrace();
         }
   catch (ParseException e) {
   e.printStackTrace(); }
+  //On ferme le flux de données pour s'assurer que les instructions sont exécutées même si une exception est levée.
         finally {
             if (null != reader) {
                 try {
@@ -649,14 +621,16 @@ public class MainActivity extends Activity {
         }
     }
 
-    // Save ToDoItems to file
+    // Save Tasks to .txt file
     private void saveItems() {
-        PrintWriter writer = null;
+        //Prints formatted representations of objects to a text-output stream.
+                PrintWriter writer = null;
         try {
             FileOutputStream fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
                     fos)));
             for (int idx = 0; idx < adapter_fam.getItemCount(); idx++) {
+                //Prints an Object and then terminates the line.
                 writer.println(adapter_fam.getItem(idx));
             }
         } catch (IOException e) {
