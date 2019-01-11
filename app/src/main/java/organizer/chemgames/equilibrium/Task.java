@@ -71,8 +71,8 @@ public class Task {
 
 
     //j defines the delay if the application was closed for some time, is calculated in MainActivity
-
-    public Timer launchTimerwithDelay(long del, final int j){
+ //long k, h
+    public Timer launchTimerwithDelayReset(long del, final long current_time, final long time_whenBackPressed, final int progressWhenBackPressed){
 
         timer = new Timer();
         timerTask = new TimerTask() {
@@ -81,14 +81,16 @@ public class Task {
                 //maximum duration: 1 year
                 if (i<32000000){
                     System.out.println("Time's up!"+i);
-                    setProgress( (int) (100 / (getProg()) * i) + j );
+                    //formula doeesn't work if back pressed 2nd time
+                    setProgress( progressWhenBackPressed + (int) ((100 / getProg())* (i)+ (int) ((100 / getProg())* ((current_time-time_whenBackPressed)/1000))));
                     i++; }
             }
         }; timer.schedule(timerTask, del, 1000);
         return timer;
     }
 
-   public Timer launchTimer(final int j){
+    public Timer launchTimerwithDelay(long del){
+
         timer = new Timer();
         timerTask = new TimerTask() {
             @Override
@@ -96,7 +98,37 @@ public class Task {
                 //maximum duration: 1 year
                 if (i<32000000){
                     System.out.println("Time's up!"+i);
-                        setProgress( (int) (100 / (getProg()) * i) + j );
+                    setProgress( (int) ((100 / getProg()) * i));
+                    i++; }
+            }
+        }; timer.schedule(timerTask, del, 1000);
+        return timer;
+    }
+
+   public Timer launchTimer(){
+        timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                //maximum duration: 1 year
+                if (i<32000000){
+                    System.out.println("Time's up!"+i);
+                        setProgress( (int) ((100 / getProg()) * i));
+                    i++; }
+            }
+        }; timer.schedule(timerTask, 0, 1000);
+        return timer;
+    }
+
+    public Timer launchTimerReset(final long current_time, final long time_whenBackPressed, final int progressWhenBackPressed){
+        timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                //maximum duration: 1 year
+                if (i<32000000){
+                    System.out.println("Time's up!"+i);
+                    setProgress( progressWhenBackPressed + (int) ((100 / getProg())* (i)+ (int) ((100 / getProg())* ((current_time-time_whenBackPressed)/1000))));
                     i++; }
             }
         }; timer.schedule(timerTask, 0, 1000);

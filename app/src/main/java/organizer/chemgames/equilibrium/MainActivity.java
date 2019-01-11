@@ -2,6 +2,7 @@ package organizer.chemgames.equilibrium;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.renderscript.RenderScript;
 import android.support.annotation.Nullable;
@@ -83,11 +84,18 @@ public class MainActivity extends Activity {
     RecyclerView recyclerView_hobb;
     ConstraintLayout test;
     ConstraintLayout test2;
+    TextView text1;
+    TextView text2;
     Task t;
 
     int a;
     int b;
     int i;
+
+    long timeWhenCancelled =0;
+    int progressWhenCancelled =0;
+    long timecurr=0;
+    int j = 0;
 
 
     @Override
@@ -99,6 +107,9 @@ public class MainActivity extends Activity {
 
         test = (ConstraintLayout)findViewById( R.id.expendfam );
         test2 = (ConstraintLayout) findViewById( R.id.collapsefam );
+
+        text1 = (TextView)findViewById( R.id.titlelabelprof );
+        text2 = (TextView)findViewById( R.id.titlelabeleduc );
 
 
         add = (FloatingActionButton)findViewById( R.id.addtask );
@@ -235,9 +246,9 @@ public class MainActivity extends Activity {
                        }*/
 
             if (timenow >= t.getMcal_date()){
-                t.launchTimer(0);
+                t.launchTimer();
             }
-            else t.launchTimerwithDelay( del, 0 );
+            else t.launchTimerwithDelay( del );
 
                    thr = new Thread() {
                        @Override
@@ -511,6 +522,7 @@ public class MainActivity extends Activity {
         super.onResume();
         // Load saved ToDoItems, if necessary
       if (adapter_fam.getItemCount() == 0)
+
          loadItems();
     }
 
@@ -523,13 +535,25 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if (adapter_fam.getItemCount() != 0){
-            //save progress for task and time when the applicaton left to recalculate progress
-        t.cancelTimer();
 
+        if (adapter_fam.getItemCount() != 0){
+            
+
+            //save in shared preferences
+            Calendar c = Calendar.getInstance();
+            timeWhenCancelled = c.getTimeInMillis();
+            progressWhenCancelled = t.getProgress();
+
+            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong( "canceltime", timeWhenCancelled );
+            editor.putInt( "cancelprog", progressWhenCancelled );
+            editor.commit();
+
+            t.cancelTimer();
 
         }
+        super. onBackPressed();
     }
 
 
@@ -557,32 +581,38 @@ public class MainActivity extends Activity {
                 set_date = reader.readLine();
                 cal_date = reader.readLine();
 
-              final Task  m = new Task(name, Task.Category.valueOf(category), date, Long.valueOf(set_date), Long.valueOf(cal_date) );
+                t= new Task(name, Task.Category.valueOf(category), date, Long.valueOf(set_date), Long.valueOf(cal_date) );
 
-                //replace t with m while preserving progress
+                //replace t with m while preserving progress (remove t from adapter, set m as t
 
-               adapter_fam.add(m);
+                adapter_fam.add(t);
+
+                Calendar cac = Calendar.getInstance();
+                timecurr = cac.getTimeInMillis();
+                long del = t.getMcal_date()-timecurr;
+
+                SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                timeWhenCancelled = sharedPreferences.getLong( "canceltime", 0);
+                progressWhenCancelled = sharedPreferences.getInt( "cancelprog", 0 );
 
 
-                Calendar cc = Calendar.getInstance();
-                long timenow = cc.getTimeInMillis();
-                long del = m.getMcal_date()-timenow;
 
-                if (timenow >= m.getMcal_date()){
-                    m.launchTimer(20);
+                if (timecurr >= t.getMcal_date()){
+                    t.launchTimerReset(timecurr, timeWhenCancelled, progressWhenCancelled);
                 }
-                else m.launchTimerwithDelay( del, 20 );
+                else t.launchTimerwithDelayReset( del, timecurr, timeWhenCancelled, progressWhenCancelled );
 
-
+                text1.setText( ""+timecurr );
+                text2.setText( ""+timeWhenCancelled );
                 thr2 = new Thread() {
                     @Override
                     public void run() {
-                        while (m.getProgress() < 100 && m.getProgress() >= 0) {
+                        while (t.getProgress() < 100 && t.getProgress() >= 0) {
                             runOnUiThread( new Runnable() {
                                 @Override
                                 public void run() {
                                     Toast.makeText( MainActivity.this, "Thread2", Toast.LENGTH_LONG ).show();
-                                    adapter_fam.notifyItemChanged( adapter_fam.index( m ) );
+                                    adapter_fam.notifyItemChanged( adapter_fam.index( t ) );
                                     recyclerView_fam.setItemAnimator( null );
                                 }
                             } );
@@ -592,7 +622,7 @@ public class MainActivity extends Activity {
                                 e.printStackTrace();
                             }
                         }
-                        m.cancelTimer();
+                        t.cancelTimer();
                     }
                 };
                 thr2.start();
