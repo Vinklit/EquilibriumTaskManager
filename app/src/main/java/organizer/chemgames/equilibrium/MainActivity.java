@@ -39,6 +39,8 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity {
 
+    //TODO: make it work for all items
+
     //TODO: make a list of recyclerviews and give a possibility to edit/delete categories (future), or set a list of cat. at the beginning
 
     //TODO: resolve the change size on delete issue
@@ -50,7 +52,7 @@ public class MainActivity extends Activity {
 
     //TODO: sort by treemap
 
-    //TODO : if category not selected, make it mandatory
+    //TODO : if category not selected, make it mandatory (?)
 
     //TODO: consommation de RAM en temps réel
 
@@ -536,21 +538,27 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
 
+      //SAVES ONLY ONE (LAST) PROGRESS IN SHARED PREFERENCES
+
         if (adapter_fam.getItemCount() != 0){
-            
 
-            //save in shared preferences
-            Calendar c = Calendar.getInstance();
-            timeWhenCancelled = c.getTimeInMillis();
-            progressWhenCancelled = t.getProgress();
+            for (int idx = 0; idx < adapter_fam.getItemCount(); idx++) {
+                //Prints an Object and then terminates the line.
+                 t = adapter_fam.getItem(idx);
 
-            SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putLong( "canceltime", timeWhenCancelled );
-            editor.putInt( "cancelprog", progressWhenCancelled );
-            editor.commit();
+                //save in shared preferences
+                Calendar c = Calendar.getInstance();
+                timeWhenCancelled = c.getTimeInMillis();
+                progressWhenCancelled = t.getProgress();
 
-            t.cancelTimer();
+                SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putLong( "canceltime", timeWhenCancelled );
+                editor.putInt( "cancelprog", progressWhenCancelled );
+                editor.commit();
+
+                t.cancelTimer();
+            }
 
         }
         super. onBackPressed();
@@ -581,15 +589,19 @@ public class MainActivity extends Activity {
                 set_date = reader.readLine();
                 cal_date = reader.readLine();
 
-                t= new Task(name, Task.Category.valueOf(category), date, Long.valueOf(set_date), Long.valueOf(cal_date) );
+                final Task m = new Task(name, Task.Category.valueOf(category), date, Long.valueOf(set_date), Long.valueOf(cal_date) );
 
                 //replace t with m while preserving progress (remove t from adapter, set m as t
 
-                adapter_fam.add(t);
+                adapter_fam.add(m);
+
+                for (int idx = 0; idx < adapter_fam.getItemCount(); idx++) {
+
+
 
                 Calendar cac = Calendar.getInstance();
                 timecurr = cac.getTimeInMillis();
-                long del = t.getMcal_date()-timecurr;
+                long del = m.getMcal_date()-timecurr;
 
                 SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
                 timeWhenCancelled = sharedPreferences.getLong( "canceltime", 0);
@@ -597,22 +609,22 @@ public class MainActivity extends Activity {
 
 
 
-                if (timecurr >= t.getMcal_date()){
-                    t.launchTimerReset(timecurr, timeWhenCancelled, progressWhenCancelled);
+                if (timecurr >= m.getMcal_date()){
+                    m.launchTimerReset(timecurr, timeWhenCancelled, progressWhenCancelled);
                 }
-                else t.launchTimerwithDelayReset( del, timecurr, timeWhenCancelled, progressWhenCancelled );
+                else m.launchTimerwithDelayReset( del, timecurr, timeWhenCancelled, progressWhenCancelled );
 
                 text1.setText( ""+timecurr );
                 text2.setText( ""+timeWhenCancelled );
                 thr2 = new Thread() {
                     @Override
                     public void run() {
-                        while (t.getProgress() < 100 && t.getProgress() >= 0) {
+                        while (m.getProgress() < 100 && m.getProgress() >= 0) {
                             runOnUiThread( new Runnable() {
                                 @Override
                                 public void run() {
                                     Toast.makeText( MainActivity.this, "Thread2", Toast.LENGTH_LONG ).show();
-                                    adapter_fam.notifyItemChanged( adapter_fam.index( t ) );
+                                    adapter_fam.notifyItemChanged( adapter_fam.index( m ) );
                                     recyclerView_fam.setItemAnimator( null );
                                 }
                             } );
@@ -622,13 +634,13 @@ public class MainActivity extends Activity {
                                 e.printStackTrace();
                             }
                         }
-                        t.cancelTimer();
+                        m.cancelTimer();
                     }
                 };
                 thr2.start();
 
 
-            }
+            }}
 
             //Si le fichier n'est pas trouvé
         } catch (FileNotFoundException e) {
@@ -661,6 +673,7 @@ public class MainActivity extends Activity {
                     fos)));
             for (int idx = 0; idx < adapter_fam.getItemCount(); idx++) {
                 //Prints an Object and then terminates the line.
+                //Should also include progress when quit
                 writer.println(adapter_fam.getItem(idx));
             }
         } catch (IOException e) {
