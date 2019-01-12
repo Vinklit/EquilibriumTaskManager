@@ -207,7 +207,7 @@ public class AddTask extends Activity {
 
                 // Package data to send to main
                 Intent intent = new Intent();
-                Task.packageIntent(intent, category,  titleString, wholeDate, setdate, caldate);
+                Task.packageIntent(intent, category,  titleString, wholeDate, setdate, caldate, 0, 0);
                 setResult(RESULT_OK, intent);
                 finish();
 

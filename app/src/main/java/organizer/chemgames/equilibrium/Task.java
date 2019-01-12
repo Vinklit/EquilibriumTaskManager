@@ -26,6 +26,8 @@ public class Task {
     public final static String DATE = "date";
     public final static String SETDATE = "set_date";
     public final static String CALDATE = "cal_date";
+    public final static String PROG_WHEN_BACK = "prog_when_back";
+    public final static String TIME_WHEN_BACK = "time_when_back";
 
     String taskname = new String();
     private Category mycategory = Category.FAM;
@@ -34,14 +36,19 @@ public class Task {
     private Date mDate = new Date();
     private long mset_date = 0;
     private long mcal_date = 0;
+    private int mprog_when_back = 0;
+    private long time_when_back = 0;
 
 
-        Task (String name, Category category, Date date, long set_date, long cal_date){
+
+        Task (String name, Category category, Date date, long set_date, long cal_date, int prog_when_back, long time_when_back){
             this.taskname = name;
             this.mycategory = category;
             this.mDate = date;
             this.mset_date = set_date;
             this.mcal_date = cal_date;
+            this.mprog_when_back = prog_when_back;
+            this.time_when_back = time_when_back;
         }
 
     Task(Intent intent) {
@@ -49,11 +56,14 @@ public class Task {
         mycategory = Category.valueOf(intent.getStringExtra(Task.CATEGORY));
         mset_date = intent.getLongExtra(Task.SETDATE, 0 );
         mcal_date = intent.getLongExtra(Task.CALDATE, 0 );
+        mprog_when_back = intent.getIntExtra(Task.PROG_WHEN_BACK, 0 );
+        time_when_back = intent.getLongExtra(Task.TIME_WHEN_BACK, 0 );
         try {
             mDate = Task.FORMAT.parse(intent.getStringExtra(Task.DATE));
         } catch (ParseException e) {
             mDate = new Date();
         } }
+
 
 
 
@@ -72,7 +82,7 @@ public class Task {
 
     //j defines the delay if the application was closed for some time, is calculated in MainActivity
  //long k, h
-    public Timer launchTimerwithDelayReset(long del, final long current_time, final long time_whenBackPressed, final int progressWhenBackPressed){
+    public Timer launchTimerwithDelayReset(long del, final long current_time, final long time_back, final int prg){
 
         timer = new Timer();
         timerTask = new TimerTask() {
@@ -82,7 +92,7 @@ public class Task {
                 if (i<32000000){
                     System.out.println("Time's up!"+i);
                     //formula doeesn't work if back pressed 2nd time
-                    setProgress( progressWhenBackPressed + (int) ((100 / getProg())* (i)+ (int) ((100 / getProg())* ((current_time-time_whenBackPressed)/1000))));
+                    setProgress( prg + (int) ((100 / getProg())* (i)+ (int) ((100 / getProg())* ((current_time-time_back)/1000))));
                     i++; }
             }
         }; timer.schedule(timerTask, del, 1000);
@@ -120,7 +130,7 @@ public class Task {
         return timer;
     }
 
-    public Timer launchTimerReset(final long current_time, final long time_whenBackPressed, final int progressWhenBackPressed){
+    public Timer launchTimerReset(final long current_time, final long time_back, final int prg){
         timer = new Timer();
         timerTask = new TimerTask() {
             @Override
@@ -128,7 +138,7 @@ public class Task {
                 //maximum duration: 1 year
                 if (i<32000000){
                     System.out.println("Time's up!"+i);
-                    setProgress( progressWhenBackPressed + (int) ((100 / getProg())* (i)+ (int) ((100 / getProg())* ((current_time-time_whenBackPressed)/1000))));
+                    setProgress( prg + (int) ((100 / getProg())* (i)+ (int) ((100 / getProg())* ((current_time-time_back)/1000))));
                     i++; }
             }
         }; timer.schedule(timerTask, 0, 1000);
@@ -138,6 +148,14 @@ public class Task {
     public void cancelTimer (){
            timer.cancel();
            timer.purge();
+    }
+
+    public long getTime_when_back() {
+        return time_when_back;
+    }
+
+    public void setTime_when_back(long time_when_back) {
+        this.time_when_back = time_when_back;
     }
 
     public String getName() {
@@ -152,6 +170,14 @@ public class Task {
     }
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public int getMprog_when_back() {
+        return mprog_when_back;
+    }
+
+    public void setMprog_when_back(int mprog_when_back) {
+        this.mprog_when_back = mprog_when_back;
     }
 
     public String getTaskname() {
@@ -183,24 +209,22 @@ public class Task {
         this.mcal_date = mcal_date;
     }
 
-    public static void packageIntent(Intent intent, Category category, String name, String date, long set_date, long cal_date) {
+    public static void packageIntent(Intent intent, Category category, String name, String date, long set_date, long cal_date, int prog_when_back, long time_when_back) {
 
         intent.putExtra(Task.NAME, name);
         intent.putExtra(Task.CATEGORY, category.toString());
         intent.putExtra(Task.DATE, date);
         intent.putExtra(Task.SETDATE, set_date);
         intent.putExtra(Task.CALDATE, cal_date);
+        intent.putExtra(Task.PROG_WHEN_BACK, prog_when_back);
+        intent.putExtra(Task.TIME_WHEN_BACK, time_when_back);
 
     }
 
     public String toString() {
-        return taskname + ITEM_SEP + mycategory + ITEM_SEP + FORMAT.format(mDate) + ITEM_SEP + mset_date + ITEM_SEP + mcal_date;
+        return taskname + ITEM_SEP + mycategory + ITEM_SEP + FORMAT.format(mDate) + ITEM_SEP + mset_date + ITEM_SEP + mcal_date + ITEM_SEP + mprog_when_back + ITEM_SEP + time_when_back;
     }
 
-    public String toLog() {
-        return "Title:" + taskname + ITEM_SEP + "Category:" + mycategory + ITEM_SEP + "Date:" + FORMAT.format(mDate)
-                + ITEM_SEP + "Set_date:" + mset_date  + ITEM_SEP + "Cal_date:" + mcal_date ;
-    }
 
 
 }

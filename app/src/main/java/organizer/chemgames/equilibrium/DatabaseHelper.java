@@ -9,13 +9,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Tasks.db";
     public static final String TABLE_NAME = "tasks_table";
-    public static final String COL_1 = "ID";
-    public static final String COL_2 = "NAME";
-    public static final String COL_3 = "CATEGORY";
-    public static final String COL_4 = "DATE";
-    public static final String COL_5 = "SETDATE";
-    public static final String COL_6 = "CALDATE";
-    public static final String COL_7 = "PROG_WHEN_BACK";
+    public static final String COL_1 = "NAME";
+    public static final String COL_2 = "CATEGORY";
+    public static final String COL_3 = "DATE";
+    public static final String COL_4 = "SETDATE";
+    public static final String COL_5 = "CALDATE";
+    public static final String COL_6 = "PROG_WHEN_BACK";
+    public static final String COL_7 = "TIME_WHEN_BACK";
+
+    //id will be index of item
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -23,7 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TABLE_NAME +" (ID INTEGER PRIMARY KEY AUTOINCREMENT,NAME TEXT,CATEGORY TEXT, DATE TEXT, SETDATE TEXT, CALDATE TEXT, PROG_WHEN_BACK TEXT)");
+        db.execSQL("create table " + TABLE_NAME +" (ID INTEGER PRIMARY KEY AUTOINCREMENT,NAME TEXT,CATEGORY TEXT, DATE TEXT, SETDATE TEXT, CALDATE TEXT, PROG_WHEN_BACK TEXT, TIME_WHEN_BACK TEXT)");
     }
 
     @Override
@@ -32,15 +34,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(String name, String category, String date, String setdate, String caldate, String prog_when_back) {
+    public boolean insertData(String name, String category, String date, String setdate, String caldate, String prog_when_back, String time_when_back) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_2,name);
-        contentValues.put(COL_3,category);
-        contentValues.put(COL_4,date);
-        contentValues.put(COL_5,setdate);
-        contentValues.put(COL_6,caldate);
-        contentValues.put(COL_7,prog_when_back);
+        contentValues.put(COL_1,name);
+        contentValues.put(COL_2,category);
+        contentValues.put(COL_3,date);
+        contentValues.put(COL_4,setdate);
+        contentValues.put(COL_5,caldate);
+        contentValues.put(COL_6,prog_when_back);
+        contentValues.put(COL_7,time_when_back);
         long result = db.insert(TABLE_NAME,null ,contentValues);
         if(result == -1)
             return false;
@@ -54,22 +57,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean updateData(String id,String name, String category, String date, String setdate, String caldate, String prog_when_back) {
+    public boolean updateData(String name, String category, String date, String setdate, String caldate, String prog_when_back, String time_when_back) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_1,id);
-        contentValues.put(COL_2,name);
-        contentValues.put(COL_3,category);
-        contentValues.put(COL_4,date);
-        contentValues.put(COL_5,setdate);
-        contentValues.put(COL_6,caldate);
-        contentValues.put(COL_7,prog_when_back);
-        db.update(TABLE_NAME, contentValues, "ID = ?",new String[] { id });
+        contentValues.put(COL_1,name);
+        contentValues.put(COL_2,category);
+        contentValues.put(COL_3,date);
+        contentValues.put(COL_4,setdate);
+        contentValues.put(COL_5,caldate);
+        contentValues.put(COL_6,prog_when_back);
+        contentValues.put(COL_7,time_when_back);
+        db.update(TABLE_NAME, contentValues, null, null);
         return true;
     }
 
-    public Integer deleteData (String id) {
+    public Integer deleteData () {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME, "ID = ?",new String[] {id});
+        return db.delete(TABLE_NAME, null, null);
     }
 }

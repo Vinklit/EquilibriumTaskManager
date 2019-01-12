@@ -140,6 +140,7 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
 
     public void deleteItem(int position) {
         data.remove( position );
+
         notifyItemRemoved(position);
     }
 

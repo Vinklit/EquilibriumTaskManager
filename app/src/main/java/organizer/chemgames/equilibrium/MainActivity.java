@@ -3,6 +3,7 @@ package organizer.chemgames.equilibrium;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.renderscript.RenderScript;
 import android.support.annotation.Nullable;
@@ -67,7 +68,7 @@ public class MainActivity extends Activity {
 
     private static final int REQUEST = 0;
 
-    private static final String FILE_NAME = "Equilibrium.txt";
+    public static final String ITEM_SEP = System.getProperty("line.separator");
 
 
     TaskAdapter_fam adapter_fam;
@@ -99,6 +100,10 @@ public class MainActivity extends Activity {
     long timecurr=0;
     int j = 0;
 
+    DatabaseHelper myDb;
+
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,11 +112,14 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        myDb = new DatabaseHelper(this);
+
+   //myDb.deleteData();
+
         test = (ConstraintLayout)findViewById( R.id.expendfam );
         test2 = (ConstraintLayout) findViewById( R.id.collapsefam );
 
         text1 = (TextView)findViewById( R.id.titlelabelprof );
-        text2 = (TextView)findViewById( R.id.titlelabeleduc );
 
 
         add = (FloatingActionButton)findViewById( R.id.addtask );
@@ -130,14 +138,14 @@ public class MainActivity extends Activity {
         a = (displaymetrics.heightPixels * 70) / 100;
         b= (displaymetrics.heightPixels * 12) / 100;
 
-        recyclerView_prof = (RecyclerView) findViewById(R.id.recyclerView_prof);
+       /* recyclerView_prof = (RecyclerView) findViewById(R.id.recyclerView_prof);
         recyclerView_prof.setLayoutManager(new LinearLayoutManager(this));
         recyclerView_educ = (RecyclerView) findViewById(R.id.recyclerView_educ);
         recyclerView_educ.setLayoutManager(new LinearLayoutManager(this));
         recyclerView_sport = (RecyclerView) findViewById(R.id.recyclerView_sport);
         recyclerView_sport.setLayoutManager(new LinearLayoutManager(this));
         recyclerView_hobb = (RecyclerView) findViewById(R.id.recyclerView_hobb);
-        recyclerView_hobb.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView_hobb.setLayoutManager(new LinearLayoutManager(this));*/
 
         adapter_fam = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
 
@@ -177,7 +185,7 @@ public class MainActivity extends Activity {
 
 
 
-        adapter_prof = new TaskAdapter_prof(this, new TaskAdapter_prof.ItemClickListener(){
+    /*    adapter_prof = new TaskAdapter_prof(this, new TaskAdapter_prof.ItemClickListener(){
 
             @Override
             public void onItemClick(View v, int position) {
@@ -221,7 +229,7 @@ public class MainActivity extends Activity {
         recyclerView_hobb.setAdapter(adapter_hobb);
         ItemTouchHelper itemTouchHelperHobb = new ItemTouchHelper( new SwipeToDelete_hobb( adapter_hobb ) );
         itemTouchHelperHobb.attachToRecyclerView( recyclerView_hobb );
-
+*/
 
 
 
@@ -232,14 +240,21 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == REQUEST && resultCode == RESULT_OK){
-              t = new Task(intent);
+                t = new Task(intent);
                 Calendar cc = Calendar.getInstance();
                 long timenow = cc.getTimeInMillis();
                 long del = t.getMcal_date()-timenow;
 
                //if else statement goes here
                if(t.getCategory()==Task.Category.FAM) {
+
+
                    adapter_fam.add( t );
+                   Calendar c = Calendar.getInstance();
+                   timeWhenCancelled = c.getTimeInMillis();
+                   saveItem(t);
+
+
 
          /* if (adapter_fam.getItemCount()>1){
                         i = recyclerView_fam.getHeight();
@@ -247,7 +262,7 @@ public class MainActivity extends Activity {
                        adapter_fam.notifyDataSetChanged();
                        }*/
 
-            if (timenow >= t.getMcal_date()){
+           if (timenow >= t.getMcal_date()){
                 t.launchTimer();
             }
             else t.launchTimerwithDelay( del );
@@ -259,7 +274,6 @@ public class MainActivity extends Activity {
                                runOnUiThread( new Runnable() {
                                    @Override
                                    public void run() {
-                                       Toast.makeText( MainActivity.this, "Thread1", Toast.LENGTH_LONG ).show();
                                        adapter_fam.notifyItemChanged( adapter_fam.index( t ) );
                                        recyclerView_fam.setItemAnimator( null );
                                    }
@@ -512,11 +526,12 @@ public class MainActivity extends Activity {
 
             } }
 
-   /* @Override
+   @Override
     public void onBackPressed() {
-        moveTaskToBack(true);
-
-    }*/
+      // saveItems();
+      // t.cancelTimer();
+        super.onBackPressed();
+    }
 
 
   @Override
@@ -524,107 +539,72 @@ public class MainActivity extends Activity {
         super.onResume();
         // Load saved ToDoItems, if necessary
       if (adapter_fam.getItemCount() == 0)
-
-         loadItems();
+          getItems();
     }
 
   @Override
     protected void onPause() {
-        super.onPause();
         // Save ToDoItems
-        saveItems();
+      super.onPause();
     }
 
-    @Override
-    public void onBackPressed() {
-
-      //SAVES ONLY ONE (LAST) PROGRESS IN SHARED PREFERENCES
-
-        if (adapter_fam.getItemCount() != 0){
-
-            for (int idx = 0; idx < adapter_fam.getItemCount(); idx++) {
-                //Prints an Object and then terminates the line.
-                 t = adapter_fam.getItem(idx);
-
-                //save in shared preferences
-                Calendar c = Calendar.getInstance();
-                timeWhenCancelled = c.getTimeInMillis();
-                progressWhenCancelled = t.getProgress();
-
-                SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putLong( "canceltime", timeWhenCancelled );
-                editor.putInt( "cancelprog", progressWhenCancelled );
-                editor.commit();
-
-                t.cancelTimer();
-            }
-
-        }
-        super. onBackPressed();
-    }
 
 
 
 
     // Load stored Tasks
-    private void loadItems() {
-        //Reads text from a character-input stream, buffering characters so as to provide for the efficient reading of characters, arrays, and lines.
-        //Without buffering, each invocation of read() or readLine() could cause bytes to be read from the file,
-        // converted into characters, and then returned, which can be very inefficient.
-        BufferedReader reader = null;
-        try {
-            FileInputStream fis = openFileInput(FILE_NAME);
-            reader = new BufferedReader(new InputStreamReader(fis));
-            //On crée des varyables pour y affecter es résultats de la lécture
-            String name = null;
-            String category = null;
-            Date date = null;
-            String set_date = null;
-            String cal_date = null;
-            //Tand que l'affectation de la variable est possible, on boucle; on sort de la boucle lorsque le fichier est terminé
-            while (null != (name = reader.readLine())) {
-              category = reader.readLine();
-              date = Task.FORMAT.parse(reader.readLine());
-                set_date = reader.readLine();
-                cal_date = reader.readLine();
-
-                final Task m = new Task(name, Task.Category.valueOf(category), date, Long.valueOf(set_date), Long.valueOf(cal_date) );
-
-                //replace t with m while preserving progress (remove t from adapter, set m as t
-
-                adapter_fam.add(m);
-
-                for (int idx = 0; idx < adapter_fam.getItemCount(); idx++) {
+        private void getItems() {
+            try {
+        Cursor res = myDb.getAllData();
 
 
+            while (res.moveToNext()) {
+            String updname = res.getString(1);
+            String updcategory = res.getString(2);
+            String upddate =res.getString(3);
+            String updset_date =res.getString(4);
+            String updcal_date =res.getString(5);
+            String uprog_when_back =res.getString(6);
+            String utime_when_back =res.getString(7);
+
+
+
+               t = new Task(updname, Task.Category.valueOf(updcategory), Task.FORMAT.parse(upddate), Long.valueOf(updset_date), Long.valueOf(updcal_date), Integer.valueOf(uprog_when_back), Long.valueOf(utime_when_back) );
+
+               //classification by urgency
+                adapter_fam.add(t);
+                adapter_fam.notifyDataSetChanged();
+                String nm= t.getName();
+                Task.Category cat = t.getCategory();
+                Date dt = t.getDate();
+                long cd = t.getMcal_date();
 
                 Calendar cac = Calendar.getInstance();
                 timecurr = cac.getTimeInMillis();
-                long del = m.getMcal_date()-timecurr;
+                long del = t.getMcal_date()-timecurr;
 
-                SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-                timeWhenCancelled = sharedPreferences.getLong( "canceltime", 0);
-                progressWhenCancelled = sharedPreferences.getInt( "cancelprog", 0 );
+                int pb= t.getMprog_when_back();
+                long tb= t.getTime_when_back();
 
+              String s=  nm+ITEM_SEP+ ""+cat +ITEM_SEP+ Task.FORMAT.format(dt)+ITEM_SEP+ String.valueOf(t.getMset_date())+ITEM_SEP+String.valueOf(cd)+ITEM_SEP+ String.valueOf(pb)+ITEM_SEP+String.valueOf(tb);
 
-
-                if (timecurr >= m.getMcal_date()){
-                    m.launchTimerReset(timecurr, timeWhenCancelled, progressWhenCancelled);
+                if (timecurr >= t.getMcal_date()){
+                    t.launchTimerReset(timecurr, tb, pb);
                 }
-                else m.launchTimerwithDelayReset( del, timecurr, timeWhenCancelled, progressWhenCancelled );
+                else t.launchTimerwithDelayReset( del, timecurr, tb, pb);
 
-                text1.setText( ""+timecurr );
-                text2.setText( ""+timeWhenCancelled );
+                text1.setText(s );
+
+
                 thr2 = new Thread() {
                     @Override
                     public void run() {
-                        while (m.getProgress() < 100 && m.getProgress() >= 0) {
+                        while (t.getProgress() < 100 && t.getProgress() >= 0) {
                             runOnUiThread( new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText( MainActivity.this, "Thread2", Toast.LENGTH_LONG ).show();
-                                    adapter_fam.notifyItemChanged( adapter_fam.index( m ) );
+                                    adapter_fam.notifyDataSetChanged();
+                                    adapter_fam.notifyItemChanged( adapter_fam.index(t ) );
                                     recyclerView_fam.setItemAnimator( null );
                                 }
                             } );
@@ -634,64 +614,60 @@ public class MainActivity extends Activity {
                                 e.printStackTrace();
                             }
                         }
-                        m.cancelTimer();
+                        t.cancelTimer();
                     }
                 };
                 thr2.start();
 
 
-            }}
-
-            //Si le fichier n'est pas trouvé
-        } catch (FileNotFoundException e) {
-            e.printStackTrace(); }
-            //Si erreur de lécture/écriture
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-  catch (ParseException e) {
-  e.printStackTrace(); }
-  //On ferme le flux de données pour s'assurer que les instructions sont exécutées même si une exception est levée.
-        finally {
-            if (null != reader) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
-        }
-    }
+        } catch (ParseException e) {
+        e.printStackTrace();
+    }}
 
-    // Save Tasks to .txt file
+    // Save Tasks to SQL file
     private void saveItems() {
-        //Prints formatted representations of objects to a text-output stream.
-                PrintWriter writer = null;
-        try {
-            FileOutputStream fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-                    fos)));
-            for (int idx = 0; idx < adapter_fam.getItemCount(); idx++) {
-                //Prints an Object and then terminates the line.
-                //Should also include progress when quit
-                writer.println(adapter_fam.getItem(idx));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (null != writer) {
-                writer.close();
-            }
-        }
-    }
 
-    private void log(String msg) {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        Calendar c = Calendar.getInstance();
+        timeWhenCancelled = c.getTimeInMillis();
+
+
+            for (int idx = 0; idx < adapter_fam.getItemCount(); idx++) {
+
+                Task n = adapter_fam.getItem(idx);
+                progressWhenCancelled = n.getProgress();
+
+                //Update, not save if already saved
+                        myDb.insertData(
+                        n.getName(),
+                        n.getCategory().toString(),
+                       Task.FORMAT.format(n.getDate()),
+                       String.valueOf(n.getMset_date()),
+                       String.valueOf(n.getMcal_date()),  String.valueOf(progressWhenCancelled), String.valueOf(timeWhenCancelled)
+               );
+                Toast.makeText( MainActivity.this, String.valueOf(n.getMcal_date())+ITEM_SEP+ String.valueOf(n.getMset_date())+ITEM_SEP+ String.valueOf(progressWhenCancelled)+ITEM_SEP+String.valueOf(timeWhenCancelled), Toast.LENGTH_LONG ).show();
+
+            } }
+
+    private void saveItem(Task n) {
+
+        Calendar c = Calendar.getInstance();
+        timeWhenCancelled = c.getTimeInMillis();
+
+
+            progressWhenCancelled = n.getProgress();
+
+            //Update, not save if already saved
+            myDb.insertData(
+                    n.getName(),
+                    n.getCategory().toString(),
+                    Task.FORMAT.format(n.getDate()),
+                    String.valueOf(n.getMset_date()),
+                    String.valueOf(n.getMcal_date()),  String.valueOf(progressWhenCancelled), String.valueOf(timeWhenCancelled)
+            );
+            Toast.makeText( MainActivity.this, String.valueOf(n.getMcal_date())+ITEM_SEP+ String.valueOf(n.getMset_date())+ITEM_SEP+ String.valueOf(progressWhenCancelled)+ITEM_SEP+String.valueOf(timeWhenCancelled), Toast.LENGTH_LONG ).show();
+
         }
-    }
 
 
 
