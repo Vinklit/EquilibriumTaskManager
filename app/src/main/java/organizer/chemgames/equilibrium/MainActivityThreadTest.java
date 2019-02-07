@@ -114,7 +114,7 @@ public class MainActivityThreadTest extends Activity {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         a = (displaymetrics.heightPixels * 70) / 100;
-        b= (displaymetrics.heightPixels * 12) / 100;
+        b= (displaymetrics.heightPixels * 20) / 100;
 
        recyclerView_prof = (RecyclerView) findViewById(R.id.recyclerView_prof);
         recyclerView_prof.setLayoutManager(new LinearLayoutManager(this));
@@ -253,7 +253,7 @@ public class MainActivityThreadTest extends Activity {
                                runOnUiThread( new Runnable() {
                                    @Override
                                    public void run() {
-                                       t.setProgress( 20 );
+                                       //t.setProgress( 20 );
                                        adapter_fam.notifyItemChanged( adapter_fam.index( t ) );
                                        recyclerView_fam.setItemAnimator( null );
                                    }
