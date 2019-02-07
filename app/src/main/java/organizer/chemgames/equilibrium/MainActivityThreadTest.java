@@ -1,11 +1,13 @@
 package organizer.chemgames.equilibrium;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.renderscript.RenderScript;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -13,47 +15,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
-import static android.content.ContentValues.TAG;
 
+public class MainActivityThreadTest extends Activity {
 
-public class MainActivity extends Activity {
+    //TODO: sort by treemap, sort also completed tasks
 
-    //TODO: make it work for all items
+    // //TODO: on restart, notify dataset changed
 
     //TODO: make a list of recyclerviews and give a possibility to edit/delete categories (future), or set a list of cat. at the beginning
 
-    //TODO: resolve the change size on delete issue
-
-    //TODO: swipe to delete (left) or reschedule (right)- dialog box. Reschedule: dialog box with time only: change category, start and end time.
+    //TODO:reschedule (right)- dialog box. Reschedule: dialog box with time only: change category, start and end time.
     //Example: if daily task: tomorrow or schedule, weekly: next week or schedule
-
-    //TODO: save data of taska in a database (SQL)
-
-    //TODO: sort by treemap
-
-    //TODO : if category not selected, make it mandatory (?)
 
     //TODO: consommation de RAM en temps réel
 
@@ -61,7 +40,7 @@ public class MainActivity extends Activity {
 
     //TODO DESIGN:
     // TODO - Floating action button (coursera)
-    // TODO - Expandable areas
+    // TODO - Expandable areas,  resolve the change size on delete issue
 
 
 
@@ -109,12 +88,10 @@ public class MainActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         myDb = new DatabaseHelper(this);
 
-   //myDb.deleteData();
+ // myDb.deleteData();
 
         test = (ConstraintLayout)findViewById( R.id.expendfam );
         test2 = (ConstraintLayout) findViewById( R.id.collapsefam );
@@ -126,26 +103,27 @@ public class MainActivity extends Activity {
         add.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent( MainActivity.this, AddTask.class );
+                Intent intent = new Intent( MainActivityThreadTest.this, AddTask.class );
                 startActivityForResult( intent, REQUEST );
             }} );
 
         recyclerView_fam = (RecyclerView) findViewById(R.id.recyclerView_fam);
         recyclerView_fam.setLayoutManager(new LinearLayoutManager(this));
 
+
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         a = (displaymetrics.heightPixels * 70) / 100;
         b= (displaymetrics.heightPixels * 12) / 100;
 
-       /* recyclerView_prof = (RecyclerView) findViewById(R.id.recyclerView_prof);
+       recyclerView_prof = (RecyclerView) findViewById(R.id.recyclerView_prof);
         recyclerView_prof.setLayoutManager(new LinearLayoutManager(this));
         recyclerView_educ = (RecyclerView) findViewById(R.id.recyclerView_educ);
         recyclerView_educ.setLayoutManager(new LinearLayoutManager(this));
         recyclerView_sport = (RecyclerView) findViewById(R.id.recyclerView_sport);
         recyclerView_sport.setLayoutManager(new LinearLayoutManager(this));
         recyclerView_hobb = (RecyclerView) findViewById(R.id.recyclerView_hobb);
-        recyclerView_hobb.setLayoutManager(new LinearLayoutManager(this));*/
+        recyclerView_hobb.setLayoutManager(new LinearLayoutManager(this));
 
         adapter_fam = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
 
@@ -155,6 +133,12 @@ public class MainActivity extends Activity {
                 v.setBackgroundColor( getResources().getColor( R.color.colorPrimary ) );
                 }}  ) ;
 
+
+      /*  if (adapter_fam.getItemCount()>2){
+            i = recyclerView_fam.getHeight();
+            recyclerView_fam.getLayoutParams().height = i;
+            adapter_fam.notifyDataSetChanged();
+        }*/
 
         recyclerView_fam.setAdapter(adapter_fam);
         ItemTouchHelper itemTouchHelperFam = new ItemTouchHelper( new SwipeToDelete_fam( adapter_fam ) );
@@ -182,6 +166,7 @@ public class MainActivity extends Activity {
             }
 
         } );
+
 
 
 
@@ -256,12 +241,6 @@ public class MainActivity extends Activity {
 
 
 
-         /* if (adapter_fam.getItemCount()>1){
-                        i = recyclerView_fam.getHeight();
-                       recyclerView_fam.getLayoutParams().height = i;
-                       adapter_fam.notifyDataSetChanged();
-                       }*/
-
            if (timenow >= t.getMcal_date()){
                 t.launchTimer();
             }
@@ -274,6 +253,7 @@ public class MainActivity extends Activity {
                                runOnUiThread( new Runnable() {
                                    @Override
                                    public void run() {
+                                       t.setProgress( 20 );
                                        adapter_fam.notifyItemChanged( adapter_fam.index( t ) );
                                        recyclerView_fam.setItemAnimator( null );
                                    }
@@ -285,6 +265,7 @@ public class MainActivity extends Activity {
                                }
                            }
                            t.cancelTimer();
+                         //set Prog to > 32000000 in order to pur completed tasks on top
                        }
                    };
                    thr.start();
@@ -526,29 +507,13 @@ public class MainActivity extends Activity {
 
             } }
 
-   @Override
-    public void onBackPressed() {
-      // saveItems();
-      // t.cancelTimer();
-        super.onBackPressed();
-    }
-
 
   @Override
     public void onResume() {
         super.onResume();
-        // Load saved ToDoItems, if necessary
       if (adapter_fam.getItemCount() == 0)
           getItems();
     }
-
-  @Override
-    protected void onPause() {
-        // Save ToDoItems
-      super.onPause();
-    }
-
-
 
 
 
@@ -573,7 +538,7 @@ public class MainActivity extends Activity {
 
                //classification by urgency
                 adapter_fam.add(t);
-                adapter_fam.notifyDataSetChanged();
+
                 String nm= t.getName();
                 Task.Category cat = t.getCategory();
                 Date dt = t.getDate();
@@ -593,7 +558,7 @@ public class MainActivity extends Activity {
                 }
                 else t.launchTimerwithDelayReset( del, timecurr, tb, pb);
 
-                text1.setText(s );
+               // text1.setText(s );
 
 
                 thr2 = new Thread() {
@@ -626,28 +591,6 @@ public class MainActivity extends Activity {
     }}
 
     // Save Tasks to SQL file
-    private void saveItems() {
-
-        Calendar c = Calendar.getInstance();
-        timeWhenCancelled = c.getTimeInMillis();
-
-
-            for (int idx = 0; idx < adapter_fam.getItemCount(); idx++) {
-
-                Task n = adapter_fam.getItem(idx);
-                progressWhenCancelled = n.getProgress();
-
-                //Update, not save if already saved
-                        myDb.insertData(
-                        n.getName(),
-                        n.getCategory().toString(),
-                       Task.FORMAT.format(n.getDate()),
-                       String.valueOf(n.getMset_date()),
-                       String.valueOf(n.getMcal_date()),  String.valueOf(progressWhenCancelled), String.valueOf(timeWhenCancelled)
-               );
-                Toast.makeText( MainActivity.this, String.valueOf(n.getMcal_date())+ITEM_SEP+ String.valueOf(n.getMset_date())+ITEM_SEP+ String.valueOf(progressWhenCancelled)+ITEM_SEP+String.valueOf(timeWhenCancelled), Toast.LENGTH_LONG ).show();
-
-            } }
 
     private void saveItem(Task n) {
 
@@ -665,17 +608,82 @@ public class MainActivity extends Activity {
                     String.valueOf(n.getMset_date()),
                     String.valueOf(n.getMcal_date()),  String.valueOf(progressWhenCancelled), String.valueOf(timeWhenCancelled)
             );
-            Toast.makeText( MainActivity.this, String.valueOf(n.getMcal_date())+ITEM_SEP+ String.valueOf(n.getMset_date())+ITEM_SEP+ String.valueOf(progressWhenCancelled)+ITEM_SEP+String.valueOf(timeWhenCancelled), Toast.LENGTH_LONG ).show();
+            //Toast.makeText( MainActivity.this, String.valueOf(n.getMcal_date())+ITEM_SEP+ String.valueOf(n.getMset_date())+ITEM_SEP+ String.valueOf(progressWhenCancelled)+ITEM_SEP+String.valueOf(timeWhenCancelled), Toast.LENGTH_LONG ).show();
 
         }
 
 
 
 
+    public class SwipeToDelete_fam extends ItemTouchHelper.SimpleCallback {
+        private TaskAdapter_fam famadapter;
+        ColorDrawable background;
+
+        public SwipeToDelete_fam(TaskAdapter_fam adapter) {
+            super( 0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT );
+            famadapter = adapter;
+            background = new ColorDrawable();
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+            if (direction == ItemTouchHelper.LEFT) {
+
+                new AlertDialog.Builder(viewHolder.itemView.getContext())
+                        .setMessage("Are you sure you want to delete the task?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Get the position of the item to be deleted
+
+                                int position = viewHolder.getAdapterPosition();
+                                Task n = famadapter.getItem( position );
+                                famadapter.getItem( position ).cancelTimer();
+                                famadapter.deleteItem(position);
+                                myDb.deleteItem(String.valueOf(n.getMcal_date()) );
+
+                                dialog.cancel();
+                            }})
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                famadapter.notifyDataSetChanged();
+                                dialog.cancel();
+                            }})
+                        .create()
+                        .show(); }
+
+            if (direction == ItemTouchHelper.RIGHT) {
+
+                new AlertDialog.Builder(viewHolder.itemView.getContext())
+                        .setMessage("Reschedule the task?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Get the position of the item to be deleted
+
+                                int position = viewHolder.getAdapterPosition();
+                                famadapter.getItem( position ).cancelTimer();
+                                famadapter.deleteItem(position);
+                                dialog.cancel();
+                                // Then you can remove this item from the adapter
+                            }})
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                famadapter.notifyDataSetChanged();
+                                dialog.cancel();
+                            }})
+                        .create()
+                        .show(); }
+        }
 
 
 
-}
+
+
+    } }
 
 
 

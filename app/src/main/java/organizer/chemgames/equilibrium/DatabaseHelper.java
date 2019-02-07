@@ -1,7 +1,7 @@
 package organizer.chemgames.equilibrium;
 
 import android.content.ContentValues;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -19,9 +19,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //id will be index of item
 
-    public DatabaseHelper(Context context) {
+    public DatabaseHelper(MainActivityThreadTest context) {
         super(context, DATABASE_NAME, null, 1);
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -74,5 +75,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Integer deleteData () {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME, null, null);
+    }
+
+    public Integer deleteItem (String caldate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, caldate , null);
     }
 }
