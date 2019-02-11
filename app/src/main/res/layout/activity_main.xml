@@ -12,7 +12,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
@@ -373,9 +373,9 @@
                 android:id="@+id/TitleLabel_adm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
+                android:background="@color/colorPrimary"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/expendsport">
+                app:layout_constraintTop_toBottomOf="@id/expendhobb">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -385,7 +385,9 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"></TextView>
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </TextView>
 
             </android.support.constraint.ConstraintLayout>
 
@@ -395,7 +397,7 @@
                 android:layout_height="wrap_content"
                 android:fadeScrollbars="false"
                 android:scrollbars="vertical"
-                app:layout_constraintTop_toBottomOf="@id/TitleLabel_hobb"
+                app:layout_constraintTop_toBottomOf="@id/TitleLabel_adm"
                 app:layout_constraintVertical_bias="0.01"
                 tools:itemCount="5"
 
@@ -405,9 +407,9 @@
                 android:id="@+id/expendadm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
+                android:background="@color/colorPrimary"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/recyclerView_hobb">
+                app:layout_constraintTop_toBottomOf="@id/recyclerView_adm">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -423,10 +425,10 @@
                 android:id="@+id/collapseadm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
+                android:background="@color/colorPrimary"
                 android:orientation="horizontal"
                 android:visibility="invisible"
-                app:layout_constraintTop_toBottomOf="@id/recyclerView_hobb">
+                app:layout_constraintTop_toBottomOf="@id/recyclerView_adm">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -446,11 +448,10 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addtask"
-        android:layout_width="94dp"
-        android:layout_height="86dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="42dp"
-        android:layout_marginBottom="97dp" />
+        android:layout_marginTop="480dp"
+        android:layout_marginEnd="50dp" />
 
 </RelativeLayout>

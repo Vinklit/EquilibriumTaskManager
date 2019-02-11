@@ -20,7 +20,7 @@ public class Task {
     Timer timer;
     TimerTask timerTask;
 
-    public enum Category {FAM, PROF, EDUC, SPORT, HOBB};
+    public enum Category {FAM, PROF, EDUC, SPORT, HOBB, OTHER};
     public final static String NAME = "name";
     public final static String CATEGORY = "category";
     public final static String DATE = "date";

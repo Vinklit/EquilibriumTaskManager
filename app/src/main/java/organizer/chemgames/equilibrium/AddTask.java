@@ -165,7 +165,10 @@ public class AddTask extends Activity {
                         break;
                     case  R.id.hobbies:
                         category = Task.Category.HOBB;
-                        break; }
+                        break;
+                    case  R.id.other:
+                        category = Task.Category.OTHER;
+                        break;}
 
 
                 String wholeDate = end_s_date + " " + end_s_time;
