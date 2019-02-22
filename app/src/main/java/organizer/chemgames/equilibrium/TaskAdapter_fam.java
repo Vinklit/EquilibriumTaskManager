@@ -112,8 +112,8 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
     }
 
     public void add(Task item) {
-        data.add(item);
 
+        data.add(item);
         int pos = index( item );
         notifyDataSetChanged();
         notifyItemChanged( pos );
@@ -138,10 +138,11 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
     }
 
 
-    public void deleteItem(int position) {
+    public void deleteTask(int position) {
+        Task m = getItem( position );
+        m.cancelTimer();
         data.remove( position );
-
-        notifyItemRemoved(position);
+       // notifyItemRemoved(position);
     }
 
 

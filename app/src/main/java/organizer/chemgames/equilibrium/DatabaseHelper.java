@@ -45,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_5,caldate);
         contentValues.put(COL_6,prog_when_back);
         contentValues.put(COL_7,time_when_back);
-        long result = db.insert(TABLE_NAME,null ,contentValues);
+        long result = db.insertWithOnConflict(TABLE_NAME,null ,contentValues, SQLiteDatabase.CONFLICT_REPLACE);
         if(result == -1)
             return false;
         else
@@ -78,6 +78,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Integer deleteItem (String caldate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, caldate , null);
+    }
+
+    public Integer checkidItem (String caldate) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME, caldate , null);
     }
