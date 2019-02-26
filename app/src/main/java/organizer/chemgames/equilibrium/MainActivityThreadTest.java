@@ -10,13 +10,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +27,6 @@ import java.util.Date;
 
 public class MainActivityThreadTest extends Activity {
 
-    //TODO: sort by treemap, sort also completed tasks
 
     //TODO: cancel timer on restart
 
@@ -37,6 +36,8 @@ public class MainActivityThreadTest extends Activity {
     //Example: if daily task: tomorrow or schedule, weekly: next week or schedule
 
     //TODO: consommation de RAM en temps réel
+
+    //TODO: sort by treemap, sort also completed tasks
 
     //TODO: make fragments with daily, weekly, monthly, full overview of progress
 
@@ -58,7 +59,7 @@ public class MainActivityThreadTest extends Activity {
     TaskAdapter_fam adapter_sport;
     TaskAdapter_fam adapter_hobb;
     TaskAdapter_fam adapter_adm;
-    FloatingActionButton add;
+   Button add;
     Thread  thr;
     Thread  thr2;
     RecyclerView recyclerView_fam;
@@ -67,15 +68,9 @@ public class MainActivityThreadTest extends Activity {
     RecyclerView recyclerView_sport;
     RecyclerView recyclerView_hobb;
     RecyclerView recyclerView_adm;
-    ConstraintLayout test;
-    ConstraintLayout test2;
-    TextView text1;
     TextView text2;
-    Task st;
-    Task t;
 
     int a;
-    int b;
     int i;
 
     long timeWhenCancelled =0;
@@ -110,7 +105,7 @@ public class MainActivityThreadTest extends Activity {
     public void onResume() {
         super.onResume();
 
-      add = (FloatingActionButton)findViewById( R.id.addtask );
+      add = (Button)findViewById( R.id.addtask );
       add.setOnClickListener( new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -136,10 +131,7 @@ public class MainActivityThreadTest extends Activity {
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      recyclerView_fam.setAdapter(adapter_fam);
-
-      ItemTouchHelper itemTouchHelperFam = new ItemTouchHelper( new SwipeToDelete_fam( adapter_fam ) );
-      itemTouchHelperFam.attachToRecyclerView( recyclerView_fam );
+      setadapterAndHelper (recyclerView_fam, adapter_fam);
 
 
       adapter_prof = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
@@ -147,10 +139,7 @@ public class MainActivityThreadTest extends Activity {
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      recyclerView_prof.setAdapter(adapter_prof);
-
-      ItemTouchHelper itemTouchHelperProf = new ItemTouchHelper( new SwipeToDelete_fam( adapter_prof ) );
-      itemTouchHelperProf.attachToRecyclerView( recyclerView_prof );
+      setadapterAndHelper (recyclerView_prof, adapter_prof);
 
 
       adapter_educ = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
@@ -158,29 +147,21 @@ public class MainActivityThreadTest extends Activity {
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      recyclerView_educ.setAdapter(adapter_educ);
-
-      ItemTouchHelper itemTouchHelperEduc = new ItemTouchHelper( new SwipeToDelete_fam( adapter_educ ) );
-      itemTouchHelperEduc.attachToRecyclerView( recyclerView_educ );
+      setadapterAndHelper (recyclerView_educ, adapter_educ);
 
       adapter_sport = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
           @Override
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      recyclerView_sport.setAdapter(adapter_sport);
-
-      ItemTouchHelper itemTouchHelperSport = new ItemTouchHelper( new SwipeToDelete_fam( adapter_sport ) );
-      itemTouchHelperSport.attachToRecyclerView( recyclerView_sport );
+      setadapterAndHelper (recyclerView_sport, adapter_sport);
 
       adapter_hobb = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
           @Override
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      recyclerView_hobb.setAdapter(adapter_hobb);
-      ItemTouchHelper itemTouchHelperHobb = new ItemTouchHelper( new SwipeToDelete_fam( adapter_hobb ) );
-      itemTouchHelperHobb.attachToRecyclerView( recyclerView_hobb );
+      setadapterAndHelper (recyclerView_hobb, adapter_hobb);
 
 
       adapter_adm = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
@@ -188,12 +169,7 @@ public class MainActivityThreadTest extends Activity {
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      recyclerView_adm.setAdapter(adapter_adm);
-
-      ItemTouchHelper itemTouchHelperAdm = new ItemTouchHelper( new SwipeToDelete_fam( adapter_adm ) );
-      itemTouchHelperAdm.attachToRecyclerView( recyclerView_adm );
-
-      Toast.makeText( MainActivityThreadTest.this,"resume", Toast.LENGTH_LONG ).show();
+      setadapterAndHelper (recyclerView_adm, adapter_adm);
 
       getItems();
     }
@@ -201,6 +177,12 @@ public class MainActivityThreadTest extends Activity {
 
 
 
+    public void setadapterAndHelper (RecyclerView rv, TaskAdapter_fam ad){
+
+        rv.setAdapter(ad);
+        ItemTouchHelper itemTouchHelper= new ItemTouchHelper( new SwipeToDelete_fam( ad) );
+        itemTouchHelper.attachToRecyclerView( rv );
+    }
 
 
 
@@ -294,23 +276,19 @@ public class MainActivityThreadTest extends Activity {
 
 
 
-    // Save Tasks to SQL file
+
 
     private void saveItem(Task n) {
 
         Calendar c = Calendar.getInstance();
         timeWhenCancelled = c.getTimeInMillis();
         progressWhenCancelled = n.getProgress();
-
-            //Update, not save if already saved
-
             myDb.insertData(
                     n.getName(),
                     n.getCategory().toString(),
                     Task.FORMAT.format(n.getDate()),
                     String.valueOf(n.getMset_date()),
-                    String.valueOf(n.getMcal_date()),  String.valueOf(progressWhenCancelled), String.valueOf(timeWhenCancelled)
-            );
+                    String.valueOf(n.getMcal_date()),  String.valueOf(progressWhenCancelled), String.valueOf(timeWhenCancelled) );
         }
 
 

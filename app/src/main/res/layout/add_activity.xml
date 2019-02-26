@@ -45,7 +45,7 @@
             android:id="@+id/social"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Family and Social Activities" />
+            android:text="Family and Social Tasks" />
 
         <RadioButton
             android:id="@+id/professionnal"
@@ -76,22 +76,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Boring Administrative Task"
+            android:text="Boring Administrative Tasks"
             />
 
     </RadioGroup>
 
-
-    <EditText
-        android:id="@+id/other_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/categoryGroup"
-        android:ems="10"
-        android:hint="Enter your category here"
-        android:inputType="textShortMessage">
-
-    </EditText>
 
     <!-- Priority -->
 
@@ -101,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/other_text"
+        android:layout_below="@id/categoryGroup"
         android:layout_marginTop="1dp"
         android:text="Priority"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -140,7 +129,7 @@
             android:id="@+id/extraHighPriority"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Urgent" />
+            android:text="Burning Urgent" />
     </RadioGroup>
     <!-- Time and Date -->
 
@@ -154,85 +143,89 @@
         android:text="@string/time_and_date_string"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/colorPrimary" />
+    <TextView
+        android:id="@+id/chose_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/time_and_date"
+        android:layout_alignParentLeft="true"
+        android:text=" Start           " />
 
     <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/time_and_date"
+        android:layout_toRightOf="@id/chose_start"
         android:layout_marginTop="1dp"
         android:text="@string/no_date_set_string" />
 
-    <TextView
-        android:id="@+id/chose_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/date"
-        android:paddingLeft="60dp"
-        android:layout_below="@+id/time_and_date"
-        android:text="Chose start" />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_below="@+id/time_and_date"
+        android:layout_alignStart="@id/time_picker_button"
         android:text="@string/no_time_set_string" />
 
     <Button
         android:id="@+id/date_picker_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@id/date"
+        android:layout_alignStart="@id/date"
         android:text="@string/choose_date_string" />
+
+
+    <Button
+        android:id="@+id/time_picker_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/date_picker_button"
+        android:layout_toRightOf="@id/date_picker_button"
+        android:layout_below="@id/time"
+        android:text="@string/choose_time_string" />
 
     <CheckBox
         android:id="@+id/schedulenow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/date_picker_button"
-        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@id/time_picker_button"
         android:layout_marginTop="12dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:text="Now" />
 
-    <Button
-        android:id="@+id/time_picker_button"
+
+
+
+    <TextView
+        android:id="@+id/end_chose_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/date_picker_button"
-        android:layout_below="@id/time"
-        android:text="@string/choose_time_string" />
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/time_picker_button"
+        android:text=" End" />
 
 
     <TextView
         android:id="@+id/end_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignLeft="@id/date"
         android:layout_below="@+id/time_picker_button"
         android:layout_marginTop="1dp"
         android:text="@string/no_date_set_string" />
 
-    <TextView
-        android:id="@+id/end_chose_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/date"
-        android:paddingLeft="60dp"
-        android:layout_below="@+id/time_picker_button"
-        android:text="Chose end" />
+
 
     <TextView
         android:id="@+id/end_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@id/time"
         android:layout_below="@+id/time_picker_button"
         android:text="@string/no_time_set_string" />
 
@@ -240,7 +233,7 @@
         android:id="@+id/end_date_picker_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignLeft="@id/date_picker_button"
         android:layout_below="@+id/end_date"
         android:text="@string/choose_date_string" />
 
@@ -248,16 +241,25 @@
         android:id="@+id/end_time_picker_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@id/time_picker_button"
         android:layout_alignTop="@id/end_date_picker_button"
         android:layout_below="@+id/end_date"
         android:text="@string/choose_time_string" />
+
+    <TextView
+        android:id="@+id/recurrent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/end_time_picker_button"
+        android:layout_alignBottom="@id/scheduleGroup"
+        android:text=" or Repeat" />
 
     <RadioGroup
         android:id="@+id/scheduleGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignLeft="@id/date_picker_button"
         android:layout_below="@id/end_time_picker_button"
         android:orientation="horizontal"
         android:layout_marginTop="1dp"
@@ -291,28 +293,42 @@
 
     <Button
         android:id="@+id/cancelButton"
+        android:layout_below="@id/scheduleGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="1dp"
         android:text="@string/cancel_string" />
 
     <Button
         android:id="@+id/resetButton"
+        android:layout_below="@id/scheduleGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="Reset" />
 
     <Button
         android:id="@+id/submitButton"
+        android:layout_below="@id/scheduleGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:text="@string/submit_string" />
+
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_below="@id/submitButton"
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-2987907818101616/6300978111">
+    </com.google.android.gms.ads.AdView>
+
+    <!-- TEST ads:adUnitId="ca-app-pub-3940256099942544/6300978111"-->
+    <!-- ads:adUnitId="ca-app-pub-2987907818101616/2599599333"-->
 
 
 
