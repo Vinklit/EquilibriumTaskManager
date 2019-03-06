@@ -55,15 +55,6 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
        // }
 
 
-/* if (data.size() > 2) {
-          ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT );
-          parent_height = parent.getHeight();
-          params.height = parent_height; //height recycleviewer
-          parent.setLayoutParams( params );
-       }*/
-
-
-
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,10 +130,8 @@ public class TaskAdapter_fam extends RecyclerView.Adapter<TaskAdapter_fam.ViewHo
 
 
     public void deleteTask(int position) {
-        Task m = getItem( position );
-        m.cancelTimer();
-        data.remove( position );
-       // notifyItemRemoved(position);
+      data.remove( position );
+      //notifyItemRemoved(position);
     }
 
 

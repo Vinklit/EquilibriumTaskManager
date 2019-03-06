@@ -97,13 +97,13 @@ public class MainActivityThreadTest extends Activity {
             Task lt = new Task(intent);
             saveItem(lt);
             this.recreate();
-            Toast.makeText( MainActivityThreadTest.this,"OAR"+lt.getName(), Toast.LENGTH_LONG ).show();
             } }
 
 
   @Override
     public void onResume() {
         super.onResume();
+      Toast.makeText( MainActivityThreadTest.this,"resume", Toast.LENGTH_LONG ).show();
 
       add = (Button)findViewById( R.id.addtask );
       add.setOnClickListener( new View.OnClickListener() {
@@ -131,7 +131,9 @@ public class MainActivityThreadTest extends Activity {
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      setadapterAndHelper (recyclerView_fam, adapter_fam);
+      recyclerView_fam.setAdapter(adapter_fam);
+      ItemTouchHelper itemTouchHelper= new ItemTouchHelper( new SwipeToDelete_fam( adapter_fam) );
+      itemTouchHelper.attachToRecyclerView( recyclerView_fam );
 
 
       adapter_prof = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
@@ -139,7 +141,9 @@ public class MainActivityThreadTest extends Activity {
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      setadapterAndHelper (recyclerView_prof, adapter_prof);
+      recyclerView_prof.setAdapter(adapter_prof);
+      ItemTouchHelper itemTouchHelper2= new ItemTouchHelper( new SwipeToDelete_fam( adapter_prof) );
+      itemTouchHelper2.attachToRecyclerView( recyclerView_prof );
 
 
       adapter_educ = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
@@ -147,21 +151,27 @@ public class MainActivityThreadTest extends Activity {
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      setadapterAndHelper (recyclerView_educ, adapter_educ);
+      recyclerView_educ.setAdapter(adapter_educ);
+      ItemTouchHelper itemTouchHelper3= new ItemTouchHelper( new SwipeToDelete_fam( adapter_educ) );
+      itemTouchHelper3.attachToRecyclerView( recyclerView_educ );
 
       adapter_sport = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
           @Override
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      setadapterAndHelper (recyclerView_sport, adapter_sport);
+      recyclerView_sport.setAdapter(adapter_sport);
+      ItemTouchHelper itemTouchHelper4= new ItemTouchHelper( new SwipeToDelete_fam( adapter_sport) );
+      itemTouchHelper4.attachToRecyclerView( recyclerView_sport );
 
       adapter_hobb = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
           @Override
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      setadapterAndHelper (recyclerView_hobb, adapter_hobb);
+      recyclerView_hobb.setAdapter(adapter_hobb);
+      ItemTouchHelper itemTouchHelper5= new ItemTouchHelper( new SwipeToDelete_fam(adapter_hobb) );
+      itemTouchHelper5.attachToRecyclerView( recyclerView_hobb );
 
 
       adapter_adm = new TaskAdapter_fam(this, new TaskAdapter_fam.ItemClickListener(){
@@ -169,7 +179,9 @@ public class MainActivityThreadTest extends Activity {
           public void onItemClick(View v, int position) {
               //edit task
           }}  ) ;
-      setadapterAndHelper (recyclerView_adm, adapter_adm);
+      recyclerView_adm.setAdapter(adapter_adm);
+      ItemTouchHelper itemTouchHelper6= new ItemTouchHelper( new SwipeToDelete_fam( adapter_adm) );
+      itemTouchHelper6.attachToRecyclerView( recyclerView_adm );
 
       getItems();
     }
@@ -177,12 +189,7 @@ public class MainActivityThreadTest extends Activity {
 
 
 
-    public void setadapterAndHelper (RecyclerView rv, TaskAdapter_fam ad){
 
-        rv.setAdapter(ad);
-        ItemTouchHelper itemTouchHelper= new ItemTouchHelper( new SwipeToDelete_fam( ad) );
-        itemTouchHelper.attachToRecyclerView( rv );
-    }
 
 
 
@@ -330,10 +337,11 @@ public class MainActivityThreadTest extends Activity {
                                 // Get the position of the item to be deleted
 
                                 int position = viewHolder.getAdapterPosition();
-                                Task n = famadapter.getItem( position );
-                                //n.setProgress( 100 );
-                                famadapter.deleteTask( position );
-                                myDb.deleteItem(String.valueOf(n.getMcal_date()) );
+                                Task t = famadapter.getItem( position );
+                                famadapter.getItem( position ).cancelTimer();
+                                famadapter.deleteTask(position);
+                                famadapter.notifyItemRemoved( position );
+                                myDb.deleteItem(String.valueOf(t.getMcal_date()) );
                                 dialog.cancel();
                             }})
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -354,6 +362,7 @@ public class MainActivityThreadTest extends Activity {
 
                                 int position = viewHolder.getAdapterPosition();
                                 famadapter.getItem( position ).cancelTimer();
+                                famadapter.deleteTask(position);
                                 dialog.cancel();
                                 // Then you can remove this item from the adapter
                             }})
@@ -365,7 +374,6 @@ public class MainActivityThreadTest extends Activity {
                         .create()
                         .show(); }
         }}
-
 
 
 

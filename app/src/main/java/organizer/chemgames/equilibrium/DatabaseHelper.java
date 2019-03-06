@@ -79,7 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Integer deleteItem (String caldate) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME, caldate , null);
+        return db.delete(TABLE_NAME, COL_5 + "=" + caldate , null);
     }
 
     public Integer checkidItem (String caldate) {

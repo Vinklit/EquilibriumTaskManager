@@ -5,6 +5,7 @@
         <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
+            android:layout_margin="2dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -39,10 +40,8 @@
         android:id="@+id/categories"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/addtask"
         app:layout_constraintTop_toBottomOf="@id/tabslayout"
-        app:layout_constraintHeight_percent="0.75"
-        app:layout_constraintHeight_default="percent"
         app:layout_constraintVertical_bias="0.01">
 
             <!-- Task Categories -->
@@ -51,17 +50,20 @@
                 android:id="@+id/TitleLabel_fam"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginBottom="2dp"
                 android:background="@color/colorAccent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintWidth_default="percent"
-                app:layout_constraintWidth_percent="0.5"
-                app:layout_constraintHeight_percent="0.33"
+                app:layout_constraintWidth_percent="0.48"
+                app:layout_constraintHeight_percent="0.32"
                 app:layout_constraintHeight_default="percent"
                 app:layout_constraintHorizontal_bias="0.01"
                 app:layout_constraintVertical_bias="0.01">
+
 
                 <TextView
                     android:id="@+id/textfam"
@@ -92,7 +94,10 @@
                 app:layout_constraintTop_toTopOf="@id/TitleLabel_fam"
                 app:layout_constraintBottom_toBottomOf="@id/TitleLabel_fam"
                 app:layout_constraintLeft_toRightOf="@id/TitleLabel_fam"
-                app:layout_constraintRight_toRightOf="parent">
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.48"
+                >
 
                 <TextView
                     android:id="@+id/textprof"
@@ -120,10 +125,11 @@
                 android:id="@+id/TitleLabel_educ"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginBottom="2dp"
                 android:background="@color/colorPrimaryDark"
                 app:layout_constraintTop_toBottomOf="@id/TitleLabel_fam"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHeight_percent="0.33"
+                app:layout_constraintHeight_percent="0.32"
                 app:layout_constraintHeight_default="percent"
                 app:layout_constraintVertical_bias="0.01"
                 app:layout_constraintLeft_toLeftOf="@id/TitleLabel_fam"
@@ -161,8 +167,8 @@
         android:background="@color/color1"
         app:layout_constraintTop_toTopOf="@id/TitleLabel_educ"
         app:layout_constraintBottom_toBottomOf="@id/TitleLabel_educ"
-        app:layout_constraintLeft_toRightOf="@id/TitleLabel_educ"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintLeft_toLeftOf="@id/TitleLabel_prof"
+        app:layout_constraintRight_toRightOf="@id/TitleLabel_prof">
 
 
         <TextView
@@ -193,11 +199,13 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@color/color2"
+                app:layout_constraintVertical_bias="0.01"
                 app:layout_constraintTop_toBottomOf="@id/TitleLabel_educ"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintVertical_bias="0.01"
                 app:layout_constraintLeft_toLeftOf="@id/TitleLabel_educ"
-                app:layout_constraintRight_toRightOf="@id/TitleLabel_educ">
+                app:layout_constraintRight_toRightOf="@id/TitleLabel_educ"
+                app:layout_constraintHeight_percent="0.32"
+                app:layout_constraintHeight_default="percent">
 
                 <TextView
                     android:id="@+id/texthobb"
@@ -230,7 +238,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.01"
                 app:layout_constraintLeft_toLeftOf="@id/TitleLabel_sport"
-                app:layout_constraintRight_toRightOf="@id/TitleLabel_sport">
+                app:layout_constraintRight_toRightOf="@id/TitleLabel_sport"
+                app:layout_constraintHeight_percent="0.32"
+                app:layout_constraintHeight_default="percent">
 
                 <TextView
                     android:id="@+id/textadm"
@@ -258,9 +268,9 @@
 
     <Button
         android:id="@+id/addtask"
-        app:layout_constraintTop_toBottomOf="@id/categories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/adView"
         android:text="Add Task"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
